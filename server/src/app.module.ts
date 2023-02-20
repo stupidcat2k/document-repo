@@ -1,32 +1,39 @@
-import { TerminalDetail } from './terminal/entities/terminal-detail.entity';
-import { Terminal } from './terminal/entities/terminal.entity';
+import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
-import { TerminalModule } from './terminal/terminal.module';
-
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '123456789',
-      database: 'postgres',
-      entities: [ User, Terminal, TerminalDetail ],
-      synchronize:true,
-      logging: true
+    ConfigModule.forRoot({
+      envFilePath: './.env',
     }),
-    UserModule,
+    TypeOrmModule.forRootAsync({
+      imports:[ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService : ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('DB_HOST'),
+        port: configService.get('DB_PORT'),
+        username: configService.get('DB_USERNAME'),
+        password: configService.get('DB_PASSWORD'),
+        database: configService.get('DB_NAME'),
+        entities: [ __dirname + '/../**/*.entity{.ts,.js}' ],
+        // entities: [ __dirname + '/entities/*.entity{.ts,.js}' ],
+        synchronize:true,
+        logging: true
+      })
+    }),
     AuthModule,
-    TerminalModule
+    UserModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    }
+  ]
 })
 export class AppModule {}

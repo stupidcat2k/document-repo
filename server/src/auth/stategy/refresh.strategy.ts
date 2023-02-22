@@ -1,18 +1,23 @@
 import { AuthService } from './../auth.service';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common/decorators';
+import { PassportStrategy } from '@nestjs/passport';
+import { Strategy } from 'passport-local';
+import { UnauthorizedException } from '@nestjs/common';
+import { ExtractJwt } from 'passport-jwt';
 
 @Injectable()
-export class JwtTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class RefreshTokenStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-refresh',
+) {
   constructor(
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: '1',
+      secretOrKey: 'docs repo',
     });
   }
   async validate(payload: any) {

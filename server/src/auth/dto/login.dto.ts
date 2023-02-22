@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginRequest {
   @ApiProperty({
-    example: '!Otc2022',
+    example: 'clv@123!',
   })
   @IsNotEmpty()
   @IsString()

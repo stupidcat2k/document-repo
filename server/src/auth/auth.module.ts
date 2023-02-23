@@ -9,6 +9,6 @@ import { JwtTokenStrategy } from './stategy/jwt.strategy';
 @Module({
   imports: [UserModule, JwtModule.register({})],
   providers: [AuthService, JwtTokenStrategy, RefreshTokenStrategy],
-  controllers: [AuthController],
+  controllers: [AuthController]
 })
 export class AuthModule {}

@@ -42,7 +42,7 @@ export class AuthService {
       const accessToken = this.getAccessToken(username);
       const refreshToken = this.getRefreshToken(username);
       return {
-        user: user,
+        authUser: user,
         accessToken: accessToken,
         refreshToken: refreshToken,
       };

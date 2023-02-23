@@ -1,3 +1,4 @@
+import { FileModule } from './file/file.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,6 +22,7 @@ import datasource, { typeormConfig } from './datasource/datasource';
     }),
     UserModule,
     AuthModule,
+    FileModule
   ],
   providers: [
     {

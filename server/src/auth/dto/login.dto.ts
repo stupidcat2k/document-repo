@@ -14,5 +14,5 @@ export class LoginRequest {
   })
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  username: string;
 }

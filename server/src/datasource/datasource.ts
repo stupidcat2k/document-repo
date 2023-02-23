@@ -1,21 +1,23 @@
 import _ from 'lodash';
 import { ConfigService } from '@nestjs/config';
-import { DataSource } from 'typeorm';
+import dotenv from 'dotenv';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { DataSourceOptions } from 'typeorm';
-import { configService } from 'src/libs/config/config.service';
+import { User } from 'src/entity';
 
+dotenv.config({ path: './.env' });
+const configService = new ConfigService();
 
 export const typeormConfig: DataSourceOptions & TypeOrmModuleOptions = {
-  entities: [__dirname + '/../entity/*{.ts,.js}'],
+  entities: [User],
   type: 'postgres',
-  host: configService.getValue('DB_HOST'),
-  port: _.parseInt(configService.getValue('DB_PORT'), 10),
-  username: configService.getValue('DB_HOST'),
-  password: configService.getValue('DB_PASSWORD'),
-  database: configService.getValue('DB_DATABASE'),
-  logging: true,
-  synchronize: true,
+  host: configService.get('DB_HOST'),
+  port: _.parseInt(configService.get('DB_PORT'), 10),
+  username: configService.get('DB_USERNAME'),
+  password: configService.get('DB_PASSWORD'),
+  database: configService.get('DB_DATABASE'),
+  logging: false,
+  synchronize: false,
 };
 
 const datasource = new DataSource(typeormConfig);

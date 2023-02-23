@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
-import { Model } from './common.entity';
+import { Model } from './model';
 
-@Entity('DR_ROLE')
+@Entity({ name: 'DR_ROLE' })
 export class Role extends Model {
   @PrimaryColumn({ name: 'ROLE_ID' })
   roleId: string;

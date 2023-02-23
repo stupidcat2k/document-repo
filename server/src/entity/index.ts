@@ -1,4 +1,4 @@
-export * from './common.entity';
+export * from './model';
 export * from './group-role.entity';
 export * from './role.entity';
 export * from './user.entity';

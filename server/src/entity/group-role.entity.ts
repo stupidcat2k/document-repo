@@ -1,9 +1,9 @@
 import { Entity, JoinColumn, OneToMany } from 'typeorm';
-import { Model } from './common.entity';
+import { Model } from './model';
 import { Group } from './group.entity';
 import { Role } from './role.entity';
 
-@Entity('DR_GRP_ROLE')
+@Entity({ name: 'DR_GRP_ROLE' })
 export class GroupRole extends Model {
   @OneToMany(() => Group, (group) => group.grpId, {
     cascade: true,

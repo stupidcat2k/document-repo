@@ -1,7 +1,7 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
-import { Model } from './common.entity';
+import { Model } from './model';
 
-@Entity('DR_USR')
+@Entity({ name: 'DR_USR' })
 export class User extends Model {
   @PrimaryColumn({ name: 'USR_ID' })
   usrId: string;

@@ -9,7 +9,8 @@ import datasource, { typeormConfig } from './datasource/datasource';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      envFilePath: './.env',
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => typeormConfig,
@@ -18,8 +19,8 @@ import datasource, { typeormConfig } from './datasource/datasource';
         return datasource;
       },
     }),
-    AuthModule,
     UserModule,
+    AuthModule,
   ],
   providers: [
     {

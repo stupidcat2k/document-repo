@@ -1,3 +1,4 @@
 export class UserResponse {
-  userId: string;
+  usrId: string;
+  usrNm: string;
 }

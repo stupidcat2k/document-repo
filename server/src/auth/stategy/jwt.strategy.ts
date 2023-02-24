@@ -17,10 +17,10 @@ export class JwtTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
       secretOrKey: config.get('JWT_ACCESS_SECRET'),
     });
   }
+
   async validate(payload: TokenPayload) {
-    const { userId } = payload;
-    console.log(payload);
-    const user = await this.authService.validateUser(userId);
+    const { usrId } = payload;
+    const user = await this.authService.validateUser(usrId);
     if (!user) {
       throw new UnauthorizedException();
     }

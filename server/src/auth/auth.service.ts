@@ -1,3 +1,4 @@
+import { UserResponse } from './dto/user-response.dto';
 import { LoginRequest, TokenPayload } from './dto';
 import { UserService } from './../user/user.service';
 import { Injectable } from '@nestjs/common';
@@ -41,8 +42,13 @@ export class AuthService {
     if (user) {
       const accessToken = this.getAccessToken(username);
       const refreshToken = this.getRefreshToken(username);
+      const { usrId, usrNm } = user;
+      const authUser = {
+        usrId,
+        usrNm
+      }
       return {
-        authUser: user,
+        authUser: authUser,
         accessToken: accessToken,
         refreshToken: refreshToken,
       };
@@ -50,8 +56,24 @@ export class AuthService {
     return null;
   }
 
-  getAccessToken(userId: string): string {
-    const payload: TokenPayload = { userId };
+  async getAuthUserInfo(userId: string): Promise<UserResponse> {
+    const user = await this.userService.findUser(userId, true);
+    if (!user) {
+      throw new BadRequestException('Username is incorrect or inactive');
+    }
+    if (user) {
+      const { usrId, usrNm } = user;
+      const authUser = {
+        usrId,
+        usrNm
+      }
+      return authUser;
+    }
+    return null;
+  }
+
+  getAccessToken(usrId: string): string {
+    const payload: TokenPayload = { usrId };
     const { secret, expiresIn } = this.getAccessTokenConfig();
     const accessToken = this.jwtService.sign(payload, {
       secret,
@@ -60,8 +82,8 @@ export class AuthService {
     return accessToken;
   }
 
-  getRefreshToken(userId: string): string {
-    const payload: TokenPayload = { userId };
+  getRefreshToken(usrId: string): string {
+    const payload: TokenPayload = { usrId };
     const { secret, expiresIn } = this.getRefreshTokenConfig();
     const refreshToken = this.jwtService.sign(payload, {
       secret,

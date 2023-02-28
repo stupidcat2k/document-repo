@@ -11,10 +11,10 @@ export class ResponseObject<T> {
     };
   }
 
-  static fail<T>(data: T, message: string): ResponseObject<T> {
+  static fail<T>(message: string): ResponseObject<T> {
     return {
       success: false,
-      data: data,
+      data: null,
       message: message,
     };
   }

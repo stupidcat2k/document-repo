@@ -5,3 +5,5 @@ export const SERVER_ERROR_MESSAGE = 'Something went wrong';
 export const NAME_EXIST = 'This name already exist';
 
 export const PREFIX_MODEL = {};
+
+export const Attachment = 'ATC';

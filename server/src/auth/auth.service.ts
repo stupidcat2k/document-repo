@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -39,14 +40,18 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('Username is incorrect or inactive');
     }
+    const passwordMatches = await bcrypt.compare(password, user.usrPwd);
+    if (!passwordMatches) {
+      throw new BadRequestException('Username or password is incorrect');
+    }
     if (user) {
       const accessToken = this.getAccessToken(username);
       const refreshToken = this.getRefreshToken(username);
       const { usrId, usrNm } = user;
       const authUser = {
         usrId,
-        usrNm
-      }
+        usrNm,
+      };
       return {
         authUser: authUser,
         accessToken: accessToken,
@@ -65,8 +70,8 @@ export class AuthService {
       const { usrId, usrNm } = user;
       const authUser = {
         usrId,
-        usrNm
-      }
+        usrNm,
+      };
       return authUser;
     }
     return null;

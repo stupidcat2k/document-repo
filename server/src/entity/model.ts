@@ -1,15 +1,15 @@
 import { Column } from 'typeorm';
 
-export class Model {
-  @Column({ name: 'CRE_DT' })
+export abstract class Model {
+  @Column({ name: 'cre_dt' })
   createDate: Date;
 
-  @Column({ name: 'CRE_USR_ID' })
+  @Column({ name: 'cre_usr_id' })
   createUser: string;
 
-  @Column({ name: 'UPD_DT' })
+  @Column({ name: 'upd_dt' })
   updateDate: Date;
 
-  @Column({ name: 'UPD_USR_ID' })
+  @Column({ name: 'upd_usr_id' })
   updateUser: string;
 }

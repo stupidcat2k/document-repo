@@ -1,17 +1,17 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 import { Model } from './model';
 
-@Entity({ name: 'DR_USR' })
+@Entity({ name: 'dr_usr' })
 export class User extends Model {
-  @PrimaryColumn({ name: 'USR_ID' })
+  @PrimaryColumn({ name: 'usr_id' })
   usrId: string;
 
-  @Column({ name: 'USR_NM' })
+  @Column({ name: 'usr_nm' })
   usrNm: string;
 
-  @Column({ name: 'USR_PWD' })
+  @Column({ name: 'usr_pwd' })
   usrPwd: string;
 
-  @Column({ name: 'ACT_FLG' })
+  @Column({ name: 'act_flg' })
   actFlg: boolean;
 }

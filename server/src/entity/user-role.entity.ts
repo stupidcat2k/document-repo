@@ -3,17 +3,17 @@ import { Model } from './model';
 import { Role } from './role.entity';
 import { User } from './user.entity';
 
-@Entity({ name: 'DR_USR_ROLE' })
+@Entity({ name: 'dr_usr_role' })
 export class UserRole extends Model {
   @OneToMany(() => User, (user) => user.usrId, {
     cascade: true,
   })
-  @JoinColumn({ name: 'USR_ID' })
+  @JoinColumn({ name: 'usr_id' })
   usrId: User;
 
   @OneToMany(() => Role, (role) => role.roleId, {
     cascade: true,
   })
-  @JoinColumn({ name: 'ROLE_ID' })
+  @JoinColumn({ name: 'role_id' })
   roleId: Role;
 }

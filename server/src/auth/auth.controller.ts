@@ -1,4 +1,3 @@
-import { ExtractJwt } from 'passport-jwt';
 import { RefreshAuthGuard } from './guard/refresh-auth.guard';
 import { REFRESH_TOKEN_COOKIE_NAME } from './../libs/constants';
 import { ResponseObject } from 'src/libs/dto/response-object.dto';
@@ -49,7 +48,7 @@ export class AuthController {
   @Post('token')
   @UseGuards(RefreshAuthGuard)
   async refreshToken(
-    @CurrentUser('usrId') userId,
+    @CurrentUser('userId') userId,
   ): Promise<ResponseObject<AuthResponse>> {
     const authUser = await this.authService.getAuthUserInfo(userId);
     const token = this.authService.getAccessToken(userId);

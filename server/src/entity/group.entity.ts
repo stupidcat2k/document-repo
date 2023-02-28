@@ -1,11 +1,11 @@
 import { Entity, PrimaryColumn, Column } from 'typeorm';
 import { Model } from './model';
 
-@Entity({ name: 'DR_GRP' })
+@Entity({ name: 'dr_grp' })
 export class Group extends Model {
-  @PrimaryColumn({ name: 'GRP_ID' })
+  @PrimaryColumn({ name: 'grp_id' })
   grpId: string;
 
-  @Column({ name: 'GRP_NM' })
+  @Column({ name: 'grp_nm' })
   grpNm: string;
 }

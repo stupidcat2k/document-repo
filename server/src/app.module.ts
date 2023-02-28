@@ -22,7 +22,7 @@ import datasource, { typeormConfig } from './datasource/datasource';
     }),
     UserModule,
     AuthModule,
-    FileModule
+    FileModule,
   ],
   providers: [
     {

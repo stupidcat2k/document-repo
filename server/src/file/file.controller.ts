@@ -12,7 +12,7 @@ import { CurrentUser } from 'src/libs/decorators/current-user.decorator';
 import path from 'path';
 import { diskStorage } from 'multer';
 import { FileService } from './file.service';
-import { ResponseObject } from 'src/libs/dto/response-object.dto';
+import { ResponseObject } from 'src/libs/response-object';
 import { SERVER_ERROR_MESSAGE } from 'src/libs/constants';
 
 const uploadPath = 'upload';

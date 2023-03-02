@@ -1,12 +1,21 @@
-import { Layout } from 'antd'
+import LayoutApp from '@/components/Layout'
+import LoadingContextProvider from '@/contexts/LoadingContext'
+import NotificationContextProvider from '@/contexts/NotificationContext'
+import { loadAuthentication } from '@/redux/authAction'
+import store from '@/redux/store'
+import { Provider } from 'react-redux'
 import '../styles/globals.css'
-import '../styles/LoginForm.css'
-import '../styles/main.css'
 
 export default function App({ Component, pageProps }) {
-  return (    
-  <Layout>
-    <Component {...pageProps} />
-  </Layout>
-  )
+  return ( 
+      <Provider store={store}>
+        <NotificationContextProvider>
+          <LoadingContextProvider>
+            <LayoutApp>
+              <Component {...pageProps} />
+            </LayoutApp>
+          </LoadingContextProvider>
+        </NotificationContextProvider>
+      </Provider>
+ );
 }

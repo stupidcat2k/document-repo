@@ -6,6 +6,7 @@ import { $http } from "../core/HttpClient";
 import { updateAuthInfo, resetAuthInfo } from "./authSlice";
 import store from "@/redux/store";
 import IntervalJob from "../utils/IntervalJob";
+import jwtDecode from "jwt-decode";
 
 export const loadAuthentication = createAsyncThunk(
   "auth/loadAuthentication",

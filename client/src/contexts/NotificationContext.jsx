@@ -8,7 +8,6 @@ const NotificationContextProvider = ({ children }) => {
   const [notifyApi, contextHolder] = notification.useNotification();
 
   const notify = (type, message = "Something went wrong") => {
-    console.log(message);
     type = Object.values(STATUS_TYPE).includes(type)
       ? type
       : STATUS_TYPE.WARNING;

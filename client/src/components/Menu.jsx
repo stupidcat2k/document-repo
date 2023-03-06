@@ -13,7 +13,6 @@ import {
 } from "@/redux/authSelectors";  
 import { MenuContainer, LogoutButton } from "./styles/Menu.style";
 import { MENU_LIST } from "@/utils/MenuList";
-import { Router } from "next/router";
 
 const MenuApp = ({ theme = "dark" }) => {
   const dispatch = useDispatch();
@@ -26,7 +25,6 @@ const MenuApp = ({ theme = "dark" }) => {
       await dispatch(logoutAction());
     } finally {
       hideLoading();
-      Router.push('/login');
     }
   };
 

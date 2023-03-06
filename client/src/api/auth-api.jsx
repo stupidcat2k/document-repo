@@ -7,7 +7,7 @@ export const login = async (payload) => {
 };
 
 export const logout = async () => {
-    return await $http.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
+    return await $http.get(`${BASE_URL}/logout`, {}, { withCredentials: true });
 };
 
 export const refreshToken = async () => {

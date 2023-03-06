@@ -1,0 +1,27 @@
+.content {
+  min-height: 100vh;
+}
+
+.trigger {
+  padding: 0 24px;
+  font-size: 28px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.site {
+  background: #fff;
+}
+.background {
+  background: #f0f0f0;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td,
+.ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background: none !important;
+}

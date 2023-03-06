@@ -18,7 +18,7 @@ export const MENU_LIST = [
     },
     {
         key:   UI_KEY.USER_MANAGEMENT,
-        label: <Link href='/user-management'>User Management</Link>,
+        label: <Link href='/404'>User Management</Link>,
         icon:  <UserOutlined />
     },
 ];

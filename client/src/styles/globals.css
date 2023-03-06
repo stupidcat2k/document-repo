@@ -35,3 +35,30 @@ a {
 .ant-list-item:hover {
   background-color: #f0f9ff;
 }
+.container-fluid {
+  padding: 1rem 2.5rem;
+  margin: auto;
+}
+
+.subheader {
+  color: rgba(0,0,0,.54);
+  font-weight: 500;
+}
+
+.card,
+.card-panel {
+  padding: 15px 20px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+}
+
+.folder {
+    min-width: 185px;
+    max-width: 220px;
+    margin: 15px 20px 15px 0;
+    font-weight: 500;
+  }
+  
+  .folder i {
+    color: rgba(0,0,0,0.54);
+    margin-top: -3px;
+  }

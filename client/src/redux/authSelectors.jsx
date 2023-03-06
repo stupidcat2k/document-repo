@@ -1,7 +1,5 @@
-export const selectAuthenticated = (state) => !!state.auth.token;
+export const selectAuthenticated = (state) => state.auth.token;
 
-export const selectUsername = (state) => state.auth.user?.userName || "";
+export const selectUsername = (state) => state.auth.user?.usrNm || "";
 
-export const selectRoles = (state) => state.auth.user?.roles || "";
-
-export const selectUserId = (state) => state.auth.user?.userId || "";
+export const selectUserId = (state) => state.auth.user?.usrId || "";

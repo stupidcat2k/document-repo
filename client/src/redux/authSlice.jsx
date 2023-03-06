@@ -11,7 +11,6 @@ const authSlice = createSlice({
   reducers: {
     resetAuthInfo: (state) => Object.assign(state, getInitialState()),
     updateAuthInfo: (state, { payload }) => {
-      console.log(payload);
       const { user, token } = payload;
       state.user = user;
       state.token = token;

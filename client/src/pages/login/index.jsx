@@ -1,23 +1,23 @@
 
-import Button from '@/components/Button';
+import { Button } from '@/components';
 import { useLoading } from '@/hooks/LoadingHook';
 import { useNotify } from '@/hooks/NotificationHook';
 import { loginAction } from '@/redux/authAction';
 import { selectAuthenticated } from '@/redux/authSelectors';
-import { Form, Input, Alert, Layout } from 'antd';
-import Router from 'next/router';
+import { Form, Input } from 'antd';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, } from 'react-redux';
 
 const LoginForm = () => {
   const notify = useNotify();
   const isAuthenticated = useSelector(selectAuthenticated);
   const dispatch = useDispatch();
   const [showLoading, hideLoading] = useLoading();
-
+  const router = useRouter();
   useEffect(() => {
     if (isAuthenticated) {
-      Router.push("/");
+      router.push('/');
     }
   }, [ isAuthenticated ]);
 
@@ -26,7 +26,7 @@ const LoginForm = () => {
       showLoading();
       const { success, message } = await dispatch(loginAction(values)).unwrap();
       if (success) {
-        Router.push("/");
+        router.push('/');
       } else {
         notify("error", message);
       }
@@ -83,13 +83,6 @@ const LoginForm = () => {
         >
           <Input.Password />
         </Form.Item>
-        {isAuthenticated  ? (
-            <Alert
-              message='Invalid username or password'
-              type='error'
-              showIcon
-            />
-          ) : null}
         <Form.Item
           wrapperCol={{
             offset: 8,

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import __isNumber from "lodash/isNumber";
-import { login, logout, refreshToken } from "../api/auth-api";
+import { login, logout, refreshToken } from "../api/authApi";
 import { HTTP_REQUEST } from "../core/Constants";
 import { $http } from "../core/HttpClient";
 import { updateAuthInfo, resetAuthInfo } from "./authSlice";

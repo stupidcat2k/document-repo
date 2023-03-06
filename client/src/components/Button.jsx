@@ -17,6 +17,8 @@ const classes = {
       'bg-gray-200 hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 text-gray-900 hover:text-white',
     danger:
       'bg-red-500 hover:bg-red-800 focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-white',
+    icon:
+      'bg-white hover:bg-[#EFF0F0] text-[#3C4043]'
   },
 };
 

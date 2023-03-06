@@ -52,8 +52,10 @@ a {
 }
 
 .folder {
-    min-width: 185px;
-    max-width: 220px;
+    min-width: 239px;
+    max-width: 239px;
+    max-height: 51px;
+    min-height: 51px;
     margin: 15px 20px 15px 0;
     font-weight: 500;
   }

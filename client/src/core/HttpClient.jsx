@@ -201,7 +201,7 @@ export class HttpClient {
 }
 
 export const $http = new HttpClient({
-  baseURL: "http://localhost:4050/",
+  baseURL: "http://localhost:4040/",
 });
 
 $http.addResponseInterceptor(noIntercept, (error) => {

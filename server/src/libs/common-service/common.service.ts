@@ -8,6 +8,6 @@ export class CommonService {
     const fc_get_seqno = await this.connection.query(
       `SELECT fc_get_seqno('${module}')`,
     );
-    return fc_get_seqno[0].fc_get_seqno.toString();
+    return fc_get_seqno[0].fc_get_seqno;
   }
 }

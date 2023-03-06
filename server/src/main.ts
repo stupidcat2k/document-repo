@@ -17,7 +17,7 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   });
-  app.setGlobalPrefix("api") 
+  app.setGlobalPrefix('api');
   app.useGlobalFilters(new AllExceptionsFilter());
   app.use(cookieParser());
   await app.listen(config.get('PORT'));

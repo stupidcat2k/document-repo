@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, OneToOne } from 'typeorm';
 import { Header } from './header.entity';
 import { Model } from './model';
 
@@ -7,7 +7,7 @@ export class Content extends Model {
   @PrimaryColumn({ name: 'ctnt_id' })
   ctntId: string;
 
-  @OneToMany(() => Header, (header) => header.hdrId, {
+  @OneToOne(() => Header, (header) => header.hdrId, {
     cascade: true,
   })
   @JoinColumn({ name: 'hdr_id' })

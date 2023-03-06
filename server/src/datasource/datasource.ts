@@ -3,14 +3,13 @@ import { ConfigService } from '@nestjs/config';
 import dotenv from 'dotenv';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from 'src/entity';
-import { AttachFile } from 'src/entity';
+import { Domain, Space, User, AttachFile } from 'src/entity';
 
 dotenv.config({ path: './.env' });
 const configService = new ConfigService();
 
 export const typeormConfig: DataSourceOptions & TypeOrmModuleOptions = {
-  entities: [User, AttachFile],
+  entities: [User, AttachFile, Domain, Space],
   type: 'postgres',
   host: configService.get('DB_HOST'),
   port: _.parseInt(configService.get('DB_PORT'), 10),

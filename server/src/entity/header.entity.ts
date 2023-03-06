@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, OneToOne } from 'typeorm';
 import { Model } from './model';
 import { Space } from './space.entity';
 
@@ -10,7 +10,7 @@ export class Header extends Model {
   @Column({ name: 'prnt_hdr_id' })
   prntHdrId: string;
 
-  @OneToMany(() => Space, (space) => space.spcId, {
+  @OneToOne(() => Space, (space) => space.spcId, {
     cascade: true,
   })
   @JoinColumn({ name: 'spc_id' })

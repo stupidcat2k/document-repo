@@ -6,10 +6,10 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepostiry: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
   async findUser(username: string, actFlg: boolean) {
-    return this.userRepostiry.findOneBy({ usrId: username, actFlg: actFlg });
+    return this.userRepository.findOneBy({ usrId: username, actFlg: actFlg });
   }
 }

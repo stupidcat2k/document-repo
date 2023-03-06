@@ -49,9 +49,11 @@ export class FileController {
     try {
       const objId = req.body.objId;
       this.fileSerice.insertFile(files, userId, objId);
-      return res.send(ResponseObject.success({
-        data: files.map((file) => file.path.split(uploadPath)[1]),
-      }));
+      return res.send(
+        ResponseObject.success({
+          data: files.map((file) => file.path.split(uploadPath)[1]),
+        }),
+      );
     } catch (error) {
       console.log(error);
       return res.send(ResponseObject.fail(SERVER_ERROR_MESSAGE));

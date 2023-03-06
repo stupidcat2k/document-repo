@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { AttachFile } from 'src/entity/file.entity';
 import { Repository } from 'typeorm';
-import { Attachment } from 'src/libs/constants';
+import { PREFIX_MODEL } from 'src/libs/constants';
 
 @Injectable()
 export class FileService {
@@ -17,19 +17,19 @@ export class FileService {
     loginUsrId: string,
     objId: string,
   ) {
-      for (const file of files) {
-        const atchNo = await this.commonService.createSeqNo(Attachment);
-        this.attachFile.save({
-          createDate: new Date(),
-          createUser: loginUsrId,
-          updateDate: new Date(),
-          updateUser: loginUsrId,
-          fileLocUrl: file.path,
-          fileNm: file.originalname,
-          fileSize: file.size,
-          objId: objId,
-          atchNo: atchNo.toString()
-        });
-      };
+    for (const file of files) {
+      const atchNo = await this.commonService.createSeqNo(PREFIX_MODEL.Attachment);
+      await this.attachFile.save({
+        createDate: new Date(),
+        createUser: loginUsrId,
+        updateDate: new Date(),
+        updateUser: loginUsrId,
+        fileLocUrl: file.path,
+        fileNm: file.originalname,
+        fileSize: file.size,
+        objId: objId,
+        atchNo: atchNo.toString(),
+      });
+    }
   }
 }

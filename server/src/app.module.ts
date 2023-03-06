@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import datasource, { typeormConfig } from './datasource/datasource';
+import { SpaceModule } from './space/space.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,6 +24,7 @@ import datasource, { typeormConfig } from './datasource/datasource';
     UserModule,
     AuthModule,
     FileModule,
+    SpaceModule
   ],
   providers: [
     {

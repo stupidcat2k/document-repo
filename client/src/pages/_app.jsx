@@ -2,28 +2,31 @@ import { LayoutApp } from '@/components'
 import LoadingContextProvider from '@/contexts/LoadingContext'
 import NotificationContextProvider from '@/contexts/NotificationContext'
 import { loadAuthentication } from '@/redux/authAction'
+import { selectAuthenticated } from '@/redux/authSelectors'
 import store from '@/redux/store'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Provider, useDispatch } from 'react-redux'
+import { Provider, useDispatch, useSelector } from 'react-redux'
 import '../styles/globals.css'
 
 const AppWrapper = ({ children }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [authLoaded, setAuthLoaded] = useState(false);
+  const isAuthenticated = useSelector(selectAuthenticated);
 
   useEffect(() => {
-    if (router.pathname !== '/login') {
-      dispatch(loadAuthentication()).then(() => {
-        setAuthLoaded(true);
-      });
-    } else {
+    dispatch(loadAuthentication()).then(() => {
       setAuthLoaded(true);
-    }
-  }, [dispatch, router.pathname]);
+    });
+  }, [dispatch]);
 
   if (!authLoaded) {
+    return null;
+  }
+
+  if (!isAuthenticated && router.pathname !== '/login') {
+    router.push('/login');
     return null;
   }
 

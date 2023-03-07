@@ -14,6 +14,7 @@ import { diskStorage } from 'multer';
 import { FileService } from './file.service';
 import { ResponseObject } from 'src/libs/response-object';
 import { SERVER_ERROR_MESSAGE } from 'src/libs/constants';
+import { Public } from 'src/libs/decorators/public.decorators';
 
 const uploadPath = 'upload';
 //get current file path then join to document-repo to create folder upload same level as client, server
@@ -25,6 +26,7 @@ export class FileController {
   constructor(private fileSerice: FileService) {}
 
   @Post('upload')
+  @Public()
   @UseInterceptors(
     FilesInterceptor('files', 20, {
       storage: diskStorage({
@@ -41,13 +43,13 @@ export class FileController {
     }),
   )
   async uploadFile(
-    @CurrentUser('userId') userId,
     @Req() req,
     @UploadedFiles() files: Express.Multer.File[],
     @Res() res,
   ) {
     try {
       const objId = req.body.objId;
+      const userId = req.body.userId;
       this.fileSerice.insertFile(files, userId, objId);
       return res.send(
         ResponseObject.success({

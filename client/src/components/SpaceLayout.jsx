@@ -1,4 +1,5 @@
 import { SPACE_LIST } from '@/utils/LayoutList';
+import PropTypes from 'prop-types';
 import { Form, Input, Layout, Menu, Modal } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import Sider from 'antd/lib/layout/Sider';
@@ -6,32 +7,63 @@ import Button from './Button';
 import styles from './styles/SpaceLayout.module.css';
 import { PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { useLoading } from '@/hooks/LoadingHook';
+import { createSpace } from '@/api/spaceApi';
+import { useNotify } from '@/hooks/NotificationHook';
+import { STATUS_TYPE } from '@/core/Constants';
 
-const SpaceLayout = ({ children }) => {
+const SpaceLayout = ({ children, handleCondition, handleClickOutSide }) => {
 
   const [ showModal, setShowModal ] = useState(false);
+  const [ disable , setDisable ] = useState(false);
+  const [showLoading, hideLoading] = useLoading();
+  const notify = useNotify();
 
   const handleOpenModal = () => {
     setShowModal(true);
   };
-  const handleOk = () => {
-    setShowModal(false);
-    form.resetFields();
+  const handleOk = async () => {
+    
+    const values = form.getFieldsValue();
+    try {
+      showLoading();
+      const { message, success} = await createSpace(values);
+      if ( success ) {
+        handleCondition();
+      } else {
+        notify(STATUS_TYPE.WARNING, message);
+      }
+    } finally {
+      form.resetFields();
+      setShowModal(false);
+      hideLoading();
+    }
   };
+
   const handleCancel = () => {
     setShowModal(false);
+    setDisable(false);
     form.resetFields();
   };
 
   const [form] = Form.useForm();
+
+  const handleInput = (data) => {
+      if(data.trim() === ''){
+        return setDisable(true);
+      }
+      return setDisable(false);
+  }
 
   return (
     <Layout style={{ background: '#fff', minHeight: '93vh' }}>
     <Sider breakpoint='lg' style={{ background :'#fff', position: 'absolute', height:'93vh'}}>
       <div className='flex justify-center my-[8px]'>
         <Button size='normal' onClick={() => handleOpenModal()}>
-          <PlusOutlined className='pb-[2px]' style={{color: '#000' , fontSize:'16px' }} /> 
-          <span className='text-[16px] font-bold'> New </span>
+          <div className='flex justify-items-center'>
+            <PlusOutlined className='pt-[2px] pr-[2px] text-[#000] text-[16px]'  /> 
+            <span>New</span> 
+          </div>
         </Button>
       </div>
       <Menu
@@ -70,8 +102,11 @@ const SpaceLayout = ({ children }) => {
         >
           <Form.Item
           name="spcNm" 
+          initialValue='New Folder without name'
           >
-            <Input defaultValue='New Folder without name' />
+            <Input onChange={(e) => handleInput(e.target.value)} 
+            showCount
+            maxLength={50}/>
           </Form.Item>
           <Form.Item
           component={false}
@@ -79,7 +114,7 @@ const SpaceLayout = ({ children }) => {
 						layout="vertical"
           >
             <Button type='submit' 
-            className='mt-[5px] ml-[8px] float-right'
+            className='mt-[5px] ml-[8px] float-right' disabled={disable}
             > Create </Button>
             <Button className='mt-[5px] float-right' 
             onClick={() => handleCancel()}> 
@@ -89,6 +124,11 @@ const SpaceLayout = ({ children }) => {
       </Modal>
   </Layout>
   );
+};
+
+SpaceLayout.propTypes = {
+  children: PropTypes.node.isRequired,
+  handleCondition: PropTypes.func
 };
 
 export default SpaceLayout;

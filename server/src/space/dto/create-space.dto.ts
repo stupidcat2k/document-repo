@@ -1,9 +1,14 @@
+import { IsEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSpaceDto {
   @ApiProperty()
-  spc_nm: string;
+  @IsString()
+  spcNm: string;
 
-  @ApiProperty()
-  prnt_spc_id: string;
+  @ApiProperty({ required: false })
+  prntSpcId: string;
+
+  @ApiProperty({ required: false })
+  dmnId: string;
 }

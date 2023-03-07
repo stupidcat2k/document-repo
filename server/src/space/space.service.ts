@@ -32,10 +32,10 @@ export class SpaceService {
     createUser: userId,
     updateDate: new Date(),
     updateUser: userId,
-    prntSpcId: createSpaceDto.prnt_spc_id,
-    spcNm: createSpaceDto.spc_nm,
+    prntSpcId: createSpaceDto.prntSpcId,
+    spcNm: !createSpaceDto.spcNm ? 'New Folder without name' : createSpaceDto.spcNm,
     spcId: spcId.toString(),
-    dmnId: '1',
+    dmnId: createSpaceDto.dmnId || '1',
   })
  } 
 }

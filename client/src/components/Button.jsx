@@ -58,7 +58,7 @@ Button.propTypes = {
   className: PropTypes.string,
   pill: PropTypes.bool,
   disabled: PropTypes.bool,
-  variant: PropTypes.oneOf(['primary', 'secondary', 'danger']),
+  variant: PropTypes.oneOf(['primary', 'secondary', 'danger', 'icon']),
   size: PropTypes.oneOf(['small', 'normal', 'large']),
 };
 

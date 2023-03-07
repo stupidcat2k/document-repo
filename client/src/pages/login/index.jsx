@@ -1,5 +1,6 @@
 
 import { Button } from '@/components';
+import { STATUS_TYPE } from '@/core/Constants';
 import { useLoading } from '@/hooks/LoadingHook';
 import { useNotify } from '@/hooks/NotificationHook';
 import { loginAction } from '@/redux/authAction';
@@ -15,6 +16,7 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const [showLoading, hideLoading] = useLoading();
   const router = useRouter();
+
   useEffect(() => {
     if (isAuthenticated) {
       router.push('/');
@@ -28,7 +30,7 @@ const LoginForm = () => {
       if (success) {
         router.push('/');
       } else {
-        notify("error", message);
+        notify(STATUS_TYPE.ERROR, message);
       }
     } finally {
       hideLoading();

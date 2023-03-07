@@ -1,6 +1,7 @@
 import { Domain } from './domain.entity';
 import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, ManyToOne } from 'typeorm';
 import { Model } from './model';
+import { Header } from './header.entity';
 
 @Entity({ name: 'dr_spc' })
 export class Space extends Model {
@@ -16,9 +17,15 @@ export class Space extends Model {
   @Column({ name: 'act_flg' })
   actFlg: boolean;
 
+  @Column({ name: 'dmn_id'})
+  dmnId: string;
+
   @ManyToOne(() => Domain, (domain) => domain.spaces, {
     cascade: true,
   })
   @JoinColumn({ name: 'dmn_id' })
   domain: Domain;
+
+  @OneToMany(() => Header, (header) => header.space)
+  headers: Header[];
 }

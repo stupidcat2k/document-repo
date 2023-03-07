@@ -11,5 +11,5 @@ export class Domain extends Model {
   dmnNm: string;
 
   @OneToMany(() => Space, (space) => space.domain)
-  spaces: Space[]
+  spaces: Space[];
 }

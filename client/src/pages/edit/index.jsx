@@ -16,8 +16,9 @@ function Editor() {
   };
   return (
       <div>
-        <h1>CKEditor example</h1>
-        <CKEditorComponent onChange={handleEditorChange} initialValue={editorValue} />
+        <div className='ml-[2px] w-90 h-90'>
+          <CKEditorComponent onChange={handleEditorChange} initialValue={editorValue} />
+        </div>
         <div className='ant-back-top bottom-24'>
           <div className='ant-back-top-content bg-blue-500'>
             <div className='ant-back-top-icon flex justify-center pt-[8px]'>

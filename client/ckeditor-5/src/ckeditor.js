@@ -9,8 +9,8 @@ import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold.js';
 import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials.js';
 import FontBackgroundColor from '@ckeditor/ckeditor5-font/src/fontbackgroundcolor.js';
 import FontColor from '@ckeditor/ckeditor5-font/src/fontcolor.js';
+import FontFamily from '@ckeditor/ckeditor5-font/src/fontfamily.js';
 import FontSize from '@ckeditor/ckeditor5-font/src/fontsize.js';
-import GeneralHtmlSupport from '@ckeditor/ckeditor5-html-support/src/generalhtmlsupport.js';
 import Heading from '@ckeditor/ckeditor5-heading/src/heading.js';
 import Highlight from '@ckeditor/ckeditor5-highlight/src/highlight.js';
 import Image from '@ckeditor/ckeditor5-image/src/image.js';
@@ -23,17 +23,15 @@ import Indent from '@ckeditor/ckeditor5-indent/src/indent.js';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic.js';
 import Link from '@ckeditor/ckeditor5-link/src/link.js';
 import List from '@ckeditor/ckeditor5-list/src/list.js';
-import ListProperties from '@ckeditor/ckeditor5-list/src/listproperties.js';
 import Paragraph from '@ckeditor/ckeditor5-paragraph/src/paragraph.js';
 import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice.js';
-import Style from '@ckeditor/ckeditor5-style/src/style.js';
 import Table from '@ckeditor/ckeditor5-table/src/table.js';
+import TableCaption from '@ckeditor/ckeditor5-table/src/tablecaption.js';
 import TableCellProperties from '@ckeditor/ckeditor5-table/src/tablecellproperties';
 import TableColumnResize from '@ckeditor/ckeditor5-table/src/tablecolumnresize.js';
 import TableProperties from '@ckeditor/ckeditor5-table/src/tableproperties';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar.js';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation.js';
-import Title from '@ckeditor/ckeditor5-heading/src/title.js';
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline.js';
 
 class Editor extends ClassicEditor {}
@@ -46,8 +44,8 @@ Editor.builtinPlugins = [
 	Essentials,
 	FontBackgroundColor,
 	FontColor,
+	FontFamily,
 	FontSize,
-	GeneralHtmlSupport,
 	Heading,
 	Highlight,
 	Image,
@@ -60,17 +58,15 @@ Editor.builtinPlugins = [
 	Italic,
 	Link,
 	List,
-	ListProperties,
 	Paragraph,
 	PasteFromOffice,
-	Style,
 	Table,
+	TableCaption,
 	TableCellProperties,
 	TableColumnResize,
 	TableProperties,
 	TableToolbar,
 	TextTransformation,
-	Title,
 	Underline
 ];
 
@@ -83,20 +79,20 @@ Editor.defaultConfig = {
 			'bold',
 			'italic',
 			'underline',
-			'|',
-			'outdent',
-			'indent',
 			'bulletedList',
 			'numberedList',
+			'|',
+			'fontSize',
+			'fontColor',
+			'fontBackgroundColor',
+			'outdent',
+			'indent',
 			'|',
 			'imageUpload',
 			'blockQuote',
 			'insertTable',
 			'undo',
 			'redo',
-			'fontColor',
-			'fontSize',
-			'fontBackgroundColor',
 			'highlight'
 		]
 	},

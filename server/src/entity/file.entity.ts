@@ -15,6 +15,9 @@ export class AttachFile extends Model {
   @Column({ name: 'file_nm' })
   fileNm: string;
 
+  @Column({ name: 'svr_file_nm' })
+  svrFileNm: string;
+
   @Column({ name: 'obj_id' })
   objId: string;
 }

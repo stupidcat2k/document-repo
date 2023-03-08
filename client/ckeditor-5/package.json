@@ -7,6 +7,7 @@
   "private": true,
   "main": "./build/ckeditor.js",
   "devDependencies": {
+    "@ckeditor/ckeditor5-alignment": "^36.0.1",
     "@ckeditor/ckeditor5-autoformat": "^36.0.1",
     "@ckeditor/ckeditor5-basic-styles": "^36.0.1",
     "@ckeditor/ckeditor5-block-quote": "^36.0.1",
@@ -14,6 +15,7 @@
     "@ckeditor/ckeditor5-dev-utils": "^32.1.2",
     "@ckeditor/ckeditor5-editor-classic": "^36.0.1",
     "@ckeditor/ckeditor5-essentials": "^36.0.1",
+    "@ckeditor/ckeditor5-find-and-replace": "^36.0.1",
     "@ckeditor/ckeditor5-font": "^36.0.1",
     "@ckeditor/ckeditor5-heading": "^36.0.1",
     "@ckeditor/ckeditor5-highlight": "^36.0.1",
@@ -26,6 +28,7 @@
     "@ckeditor/ckeditor5-table": "^36.0.1",
     "@ckeditor/ckeditor5-theme-lark": "^36.0.1",
     "@ckeditor/ckeditor5-typing": "^36.0.1",
+    "@ckeditor/ckeditor5-upload": "^36.0.1",
     "css-loader": "^5.2.7",
     "postcss": "^8.4.21",
     "postcss-loader": "^4.3.0",

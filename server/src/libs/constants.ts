@@ -8,3 +8,5 @@ export const PREFIX_MODEL = {
     Attachment: 'ATC',
     Space : 'SPC'
 };
+//100mb
+export const MAX_FILE_SIZE = 104857600;

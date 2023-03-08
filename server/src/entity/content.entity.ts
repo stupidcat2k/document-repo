@@ -13,6 +13,6 @@ export class Content extends Model {
   @JoinColumn({ name: 'hdr_id' })
   hdrId: Header;
 
-  @Column({ name: 'doc_ctnt' })
-  docCtnt: string;
+  @Column({ name: 'text_ctnt' })
+  txtCtnt: string;
 }

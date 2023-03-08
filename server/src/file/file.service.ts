@@ -27,6 +27,7 @@ export class FileService {
         fileLocUrl: file.path,
         fileNm: file.originalname,
         fileSize: file.size,
+        svrFileNm: file.filename,
         objId: objId,
         atchNo: atchNo.toString(),
       });

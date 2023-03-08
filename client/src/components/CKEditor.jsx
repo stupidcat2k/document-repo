@@ -1,36 +1,26 @@
 import React from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 const CKEditorComponent = ({ onChange, initialValue }) => {
   return (
     <div>
-    <CKEditor
-      editor={ClassicEditor}
-      config={{
-        ckfinder: {
-          uploadUrl: 'http://localhost:4050/api/file/upload' 
-        },
-        imageUpload: (file, successCallback, failureCallback) => {
-          formData.append('files', file);
-          formData.append('docFolder', 'ckeditor');
-          fetch(config.ckfinder.uploadUrl, {
-            method: 'POST',
-            body: formData
-          })
-          .then(response => response.json())
-          .then(result => {
-            successCallback(result.url);
-          })
-          .catch(error => {
-            failureCallback(error.message);
-          });
-        },
-      }}
-      onChange={(event, editor) => {
-        const data = editor.getData();
-        console.log({ event, editor, data })
-      }}
-    />
+      <CKEditor
+        editor={ClassicEditor}
+        data={initialValue}
+        config={{
+          simpleUpload: {
+            uploadUrl: 'http://localhost:4050/api/file/ckeditor',
+            setHeaders: function(xhr) {
+              xhr.setRequestHeader('X-Image-Id', new Date().getTime());
+            },
+          },
+        }}
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          onChange(data);
+        }}
+      />
     </div>
   );
 };

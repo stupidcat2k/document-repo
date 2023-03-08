@@ -1,5 +1,9 @@
+import { ConfigService } from '@nestjs/config';
+import { MAX_FILE_SIZE } from './../libs/constants';
 import {
   Controller,
+  Get,
+  Param,
   Post,
   Req,
   Res,
@@ -8,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import * as fs from 'fs';
-import { CurrentUser } from 'src/libs/decorators/current-user.decorator';
 import path from 'path';
 import { diskStorage } from 'multer';
 import { FileService } from './file.service';
@@ -16,11 +19,8 @@ import { ResponseObject } from 'src/libs/response-object';
 import { SERVER_ERROR_MESSAGE } from 'src/libs/constants';
 import { Public } from 'src/libs/decorators/public.decorators';
 
-const uploadPath = 'upload';
-//get current file path then join to document-repo to create folder upload same level as client, server
-const currentPath = path.dirname(__filename);
-const pathFolder = path.join(currentPath, '..', '..', '..');
-
+const ROOT_FOLDER = path.dirname(process.cwd());
+const UPLOAD_PATH = process.env.UPLOAD_PATH || 'upload';
 @Controller('file')
 export class FileController {
   constructor(private fileSerice: FileService) {}
@@ -31,15 +31,20 @@ export class FileController {
     FilesInterceptor('files', 20, {
       storage: diskStorage({
         destination: (req, file, callback) => {
-          const docFolder = req.body.docFolder ? '/' + req.body.docFolder : '';
-          const path = pathFolder + '/' + uploadPath + docFolder;
+          const bizPath = req.body.bizFolder ? '/' + req.body.bizFolder : '';
+			    const path = ROOT_FOLDER + '/' + UPLOAD_PATH + bizPath;
           fs.mkdirSync(path, { recursive: true });
           callback(null, path);
         },
         filename: (req, file, callback) => {
-          return callback(null, file.originalname);
+          return callback(null,
+            path.parse(file.originalname).name +
+            '-' +
+            Date.now() +
+            path.extname(file.originalname));
         },
       }),
+      limits: { fileSize: MAX_FILE_SIZE },
     }),
   )
   async uploadFile(
@@ -48,17 +53,74 @@ export class FileController {
     @Res() res,
   ) {
     try {
-      const objId = req.body.objId;
-      const userId = req.body.userId;
-      this.fileSerice.insertFile(files, userId, objId);
+      const { objId, userId, bizFolder }= req.body;
+      const bizPath = bizFolder ? '/' + bizFolder : '';
+      //handle path in database
+      files.map((file) => {
+        file.path = bizPath
+				? bizPath + '/' + file.filename
+				: '/' + file.filename;
+      });
+        this.fileSerice.insertFile(files, userId, objId);
       return res.send(
         ResponseObject.success({
-          data: files.map((file) => file.path.split(uploadPath)[1]),
+          data: files.map((file) => file.path),
         }),
       );
     } catch (error) {
       console.log(error);
       return res.send(ResponseObject.fail(SERVER_ERROR_MESSAGE));
     }
+  }
+
+  @Get('upload/:bizPath/:fileName')
+  @Public()
+  async downloadFile(
+    @Param('bizPath') bizPath,
+    @Param('fileName') fileName,
+    @Res() res,
+  ) {
+    const folderPath = bizPath ? '/' + bizPath : '';
+    return res.sendFile(fileName, {
+      root: ROOT_FOLDER + '/' + UPLOAD_PATH + folderPath,
+    });
+  }
+
+  @Post('ckeditor')
+  @Public()
+  @UseInterceptors(
+    FilesInterceptor('upload', 1, {
+      storage: diskStorage({
+        destination: (req, file, callback) => {
+          const bizPath = '/ckeditor'
+			    const path = ROOT_FOLDER + '/' + UPLOAD_PATH + bizPath;
+          fs.mkdirSync(path, { recursive: true });
+          callback(null, path);
+        },
+        filename: (req, file, callback) => {
+          return callback(null,
+            path.parse(file.originalname).name +
+            '-' +
+            Date.now() +
+            path.extname(file.originalname));
+        },
+      }),
+      limits: { fileSize: MAX_FILE_SIZE },
+    }),
+  )
+  async ckeditor(
+    @Req() req,
+    @UploadedFiles() upload: Express.Multer.File,
+    @Res() res,
+  ) {
+    const BIZ_PATH = '/ckeditor';
+    const API_PATH = 'api/file/'
+    const configService = new ConfigService();
+    const HOST_PATH = configService.get('HOST_END_POINT') + ':' + configService.get('PORT') + '/';
+    upload[0].path = HOST_PATH + API_PATH + UPLOAD_PATH + BIZ_PATH + '/' + upload[0].filename;
+    const url = upload[0].path
+    return res.send({
+      url:url
+    });
   }
 }

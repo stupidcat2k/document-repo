@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Content } from './content.entity';
+import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Model } from './model';
 import { Space } from './space.entity';
 

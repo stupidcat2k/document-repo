@@ -3,6 +3,7 @@ import { Header } from '../entity/header.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { UpdateDocDTO } from './dto/update-doc.dto';
 
 @Injectable()
 export class DocService {
@@ -25,5 +26,13 @@ export class DocService {
         ,'spc.spc_nm as "spcNm"'])
         .getRawMany();
         return docs;
+    }
+
+    async updateDoc(updateDocDTO: UpdateDocDTO, userId: string){
+        const doc = await this.headerRepository.findOne({ where: { hdrId: updateDocDTO.hdrId } });
+        doc.updateDate = new Date();
+        doc.updateUser = userId;
+        doc.hdrNm = updateDocDTO.hdrNm; 
+        return await this.headerRepository.save(doc);
     }
 }

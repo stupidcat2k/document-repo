@@ -26,7 +26,7 @@ const LayoutApp = ({ children }) => {
         <Header className={styles.header}>
           <div className={styles.logo}>
             <Link href={'/'}>
-              <Image src={logo.src} preview={false} />
+              <Image src={logo.src} alt={logo.src} preview={false} />
             </Link>
           </div>
           <MenuApp theme="dark" />

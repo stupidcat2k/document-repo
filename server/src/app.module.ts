@@ -1,4 +1,4 @@
-import { DocModule } from './doc/doc.module';
+
 import { FileModule } from './file/file.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { Module } from '@nestjs/common';
@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import datasource, { typeormConfig } from './datasource/datasource';
 import { SpaceModule } from './space/space.module';
+import { DocModule } from './doc/doc.module';
 @Module({
   imports: [
     ConfigModule.forRoot({

@@ -1,7 +1,7 @@
-import { IsEmpty, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateSpaceDto {
+export class CreateSpaceDTO {
   @ApiProperty()
   @IsString()
   spcNm: string;

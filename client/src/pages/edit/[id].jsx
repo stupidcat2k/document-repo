@@ -4,6 +4,11 @@ import {
 } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
 import { Form, Input } from 'antd';
+import { useNotify } from '@/hooks/NotificationHook';
+import { STATUS_TYPE } from '@/core/Constants';
+import { createDoc } from '@/api/docApi';
+import { useLoading } from '@/hooks/LoadingHook';
+import { useRouter } from 'next/router';
 
 const CKEditorComponent = dynamic(() => import('@/components/CKEditor'), {
   ssr: false
@@ -12,16 +17,39 @@ const CKEditorComponent = dynamic(() => import('@/components/CKEditor'), {
 function Editor() {
 
   const [form] = Form.useForm();
-
+  const notify = useNotify();
+  const [showLoading, hideLoading] = useLoading();
   const [editorValue, setEditorValue] = useState('New document without content');
+  const router = useRouter();
 
-  const handleEditorChange = (data) => {
-    setEditorValue(data);
-  };
-
-  const handleSave = () => {
-    const { hdrNm, txtCtnt} = form.getFieldsValue();
-    console.log(txtCtnt);
+  const handleSave = async () => {
+    const blankSpace = '<br data-cke-filler="true">';
+    const { hdrNm } = form.getFieldsValue();
+    const txtCtnt = document.getElementsByClassName('ck-content')[0].innerHTML;
+    if (hdrNm.trim() === '') {
+       notify(STATUS_TYPE.WARNING, `Title can't be null`);
+    }
+    else if (txtCtnt.substring(3,30) === blankSpace) {
+       notify(STATUS_TYPE.WARNING, `Content can't be null`);
+    } else {
+      try {
+        showLoading();
+        const ro = {
+          spcId: router.query.id,
+          txtCtnt: txtCtnt,
+          hdrNm: hdrNm
+        }
+        const { message, success, data} = await createDoc(ro);
+        if ( success ) {
+          notify(STATUS_TYPE.SUCCESS, 'Create successfully!');
+          router.push(`/file/${data}`);
+        } else {
+          notify(STATUS_TYPE.WARNING, message);
+        }
+      } finally {
+        hideLoading();
+      }
+    }
   }
 
   return (
@@ -29,21 +57,20 @@ function Editor() {
         <Form
         form={form}
         name='control-hooks'
-        className='pl-[4px]'
+        className='px-[6px]'
         >
           <Form.Item
           name='hdrNm' 
           label='Title'
           initialValue='Title without name'
+          className='mt-[5px]'
           >
             <Input
             showCount
             maxLength={50}/>
           </Form.Item>
-          <Form.Item
-          name='txtCtnt'
-          >
-          <CKEditorComponent onChange={handleEditorChange} initialValue={editorValue} />
+          <Form.Item>
+          <CKEditorComponent initialValue={editorValue}/>
           </Form.Item>
         </Form>
         <div className='ant-back-top bottom-24'>

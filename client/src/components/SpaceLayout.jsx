@@ -12,13 +12,14 @@ import { createSpace } from '@/api/spaceApi';
 import { useNotify } from '@/hooks/NotificationHook';
 import { STATUS_TYPE } from '@/core/Constants';
 
-const SpaceLayout = ({ children, handleCondition, handleClickOutSide }) => {
+const SpaceLayout = ({ children, handleCondition, title }) => {
 
   const [ showModal, setShowModal ] = useState(false);
   const [ disable , setDisable ] = useState(false);
+
   const [showLoading, hideLoading] = useLoading();
   const notify = useNotify();
-
+  let menuKey = 'space';
   const handleOpenModal = () => {
     setShowModal(true);
   };
@@ -70,8 +71,8 @@ const SpaceLayout = ({ children, handleCondition, handleClickOutSide }) => {
           theme='light'
           mode='inline'
           id='space'
-          defaultSelectedKeys={'space'}
           items={SPACE_LIST}
+          selectedKeys={title}
         />
     </Sider>
       <Layout className={styles.site}>

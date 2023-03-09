@@ -1,7 +1,9 @@
 import { Button } from '@/components';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 const Custom404 = () => {
+  const router = useRouter();
   return (
     <section className='flex items-center min-h-screen p-16 '>
       <div className='container flex flex-col items-center justify-center px-5 mx-auto my-8'>
@@ -17,7 +19,7 @@ const Custom404 = () => {
           </p>
           <Button
             rel='noopener noreferrer'
-            href='/'
+            onClick={() => router.push('/')}
             className='px-8 py-3 font-semibold rounded bg-primary text-white hover:text-white hover:opacity-90'
           >
             Back to homepage

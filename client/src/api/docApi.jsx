@@ -9,3 +9,11 @@ export const getAllDocBySpcId = async (payload) => {
 export const updateDoc = async (payload) => {
     return await $http.put(`${BASE_URL}/update`,payload);
 }
+
+export const deleteDoc = async (payload) => {
+    return await $http.delete(`${BASE_URL}/deleteById/${payload}`);
+}
+
+export const createDoc = async (payload) => {
+    return await $http.post(`${BASE_URL}/create`,payload);
+}

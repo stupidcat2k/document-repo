@@ -8,6 +8,5 @@ export * from './group.entity';
 export * from './domain.entity';
 export * from './auth.entity';
 export * from './header.entity';
-export * from './content.entity';
 export * from './space.entity';
 export * from './file.entity';

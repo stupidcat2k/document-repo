@@ -1,15 +1,16 @@
-import { getAllDocBySpcId, updateDoc } from "@/api/docApi";
-import { SpaceLayout, Button, Folder, MoreMenu} from "@/components";
-import { STATUS_TYPE } from "@/core/Constants";
-import { useLoading } from "@/hooks/LoadingHook";
-import { useNotify } from "@/hooks/NotificationHook";
+import { deleteDoc, getAllDocBySpcId, updateDoc } from '@/api/docApi';
+import { SpaceLayout, Button, Folder, MoreMenu} from '@/components';
+import { STATUS_TYPE } from '@/core/Constants';
+import { useLoading } from '@/hooks/LoadingHook';
+import { useNotify } from '@/hooks/NotificationHook';
 import {
   DownOutlined,
   UpOutlined
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import { Breadcrumb, Form, Modal, Input } from 'antd';
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
 export default function FolderComp() {
 
   const [ icon , setIcon ] = useState(false);
@@ -28,7 +29,7 @@ export default function FolderComp() {
   useEffect(() => {
     const fetchSpace = async () => {
       if (!router.isReady) return;
-      const {data, success, message} = await getAllDocBySpcId(id);
+      const {data, success, message} = await getAllDocBySpcId(`${id}/${true}`);
       if (success) {
         setLstFile(data);
       } else {
@@ -37,6 +38,33 @@ export default function FolderComp() {
     };
     fetchSpace();
   }, [ condition, router.isReady ]);
+
+  const handleSort = () => {
+    setIcon(!icon);
+    if (icon) {
+      lstFile.sort((a, b) => {
+        if (a.hdrNm < b.hdrNm) {
+          return -1;
+        }
+        if (a.hdrNm > b.hdrNm) {
+          return 1;
+        }
+        return 0;
+      });
+      setLstFile(lstFile);
+    } else {
+      lstFile.sort((a, b) => {
+        if (a.hdrNm < b.hdrNm) {
+          return 1;
+        }
+        if (a.hdrNm > b.hdrNm) {
+          return -1;
+        }
+        return 0;
+      });
+      setLstFile(lstFile);
+    }
+  }
  
   const handleCondition = () => {
     setCondition(!condition);
@@ -55,11 +83,24 @@ export default function FolderComp() {
     setLstFile(newLstFile);
   }
 
-  const handleMenuClick = (key, name, id) => {
+  const handleMenuClick = async (key, name, id) => {
     if ( key === 'edit') {
       setShowEditModal(true);
       form.setFieldValue('hdrNm',name);
       setHdrId(id);
+    } else {
+      try {
+        showLoading();
+        const { message, success} = await deleteDoc(id);
+        if ( success ) {
+          handleCondition();
+          notify(STATUS_TYPE.SUCCESS, 'Delete file sucessfully!');
+        } else {
+          notify(STATUS_TYPE.WARNING, message);
+        }
+      } finally {
+        hideLoading();
+      }
     }
   };
 
@@ -83,6 +124,7 @@ export default function FolderComp() {
       const { message, success} = await updateDoc({hdrNm, hdrId});
       if ( success ) {
         handleCondition();
+        notify(STATUS_TYPE.SUCCESS, 'Update file sucessfully!')
       } else {
         notify(STATUS_TYPE.WARNING, message);
       }
@@ -92,38 +134,38 @@ export default function FolderComp() {
       hideLoading();
     }
   };
-
   return (
     <SpaceLayout handleCondition = {handleCondition}>
-        <div className="container-fluid pl-12">
-          <div className="flex w-full justify-between">
-          <Breadcrumb separator=">">
+        <div className='container-fluid pl-12'>
+          <div className='flex w-full justify-between'>
+          <Breadcrumb separator='>'>
             <Breadcrumb.Item onClick={() => router.push('/')} className='cursor-pointer'>Space</Breadcrumb.Item>
-            <Breadcrumb.Item href="">{lstFile && lstFile.length !==0 ? lstFile[0].spcNm : 'undefined'}</Breadcrumb.Item>
+            <Breadcrumb.Item href=''>{lstFile && lstFile.length ? lstFile[0].spcNm : lstFile.spcNm}</Breadcrumb.Item>
           </Breadcrumb>
-            <div className="flex">
-              <p className="mr-[10px] pt-1">Name</p>
-              <Button size='small' variant='icon' onClick={() => setIcon(!icon) } >{!icon ? <DownOutlined /> : <UpOutlined />}</Button>
+            <div className='flex'>
+              <p className='mr-[10px] pt-1'>Name</p>
+              <Button size='small' variant='icon' onClick={handleSort} >{!icon ? <DownOutlined /> : <UpOutlined />}</Button>
             </div>
           </div>
           <div>
-            <Button>New Document</Button>
+            <Button onClick={() =>router.push(`/edit/${id}`)}>New Document</Button>
           </div>
-          <div className="grid grid-cols-6">
-            {lstFile && lstFile.length !== 0 ? 
+          <div className='grid grid-cols-6'>
+            {lstFile && lstFile.length ? 
               lstFile.map(header => (
-                <div>
-                <MoreMenu className='float-right' onClick={(key) =>handleMenuClick(key, header.hdrNm, header.hdrId)}/>
+                <div className='flex'>
                 <Folder key={header.hdrId} id={header.hdrId} name={header.hdrNm} 
                 handleClickFolder={handleClickFolder} 
                 clicked={header.clicked}
-                /> 
+                >
+                  <MoreMenu onClick={(key) =>handleMenuClick(key, header.hdrNm, header.hdrId)}/>
+                </Folder> 
                 </div>
               ))
-            : <p className="text-[20px]"> No space created !</p>}
+            : <p className='text-[20px]'> No space created !</p>}
            </div>
         </div>     
-        <Modal title="Edit Name" 
+        <Modal title='Edit Name' 
             open={showEditModal} 
             onCancel={handleCancel}
             footer={null}
@@ -131,16 +173,16 @@ export default function FolderComp() {
             >
               <Form
               form={form}
-              name="control-hooks"
-              onFinish={(values) => handleOk(values)}
+              name='control-hooks'
+              onFinish={handleOk}
               style={{
                 maxWidth: 600,
               }}
               >
-                <Form.Item name="hdrNm">
+                <Form.Item name='hdrNm'>
                   <Input onChange={(e) => handleInput(e.target.value)} showCount maxLength={60}/>
                 </Form.Item>
-                <Form.Item component={false} id="category-editor-form" layout="vertical">
+                <Form.Item component={false} id='category-editor-form' layout='vertical'>
                   <Button type='submit' className='mt-[5px] ml-[8px] float-right' disabled={disable}> Change </Button>
                   <Button className='mt-[5px] float-right' onClick={() => handleCancel()}> Cancel </Button>
                 </Form.Item>

@@ -7,24 +7,19 @@ import {
   DownOutlined,
   UpOutlined
 } from "@ant-design/icons";
-import { Form, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
 
-export default function Home() {
+export default function Trash() {
   const [ icon , setIcon ] = useState(false);
   const [ lstSpace, setLstSpace] = useState([]);
   const [ condition, setCondition ] = useState(false);
-  const [ disable , setDisable ] = useState(false);
-  const [ showEditModal, setShowEditModal ] = useState(false);
-  const [ spcId, setSpcId ] = useState('');
 
   const notify = useNotify();
-  const [form] = Form.useForm();
   const [showLoading, hideLoading] = useLoading();
 
   useEffect(() => {
     const fetchSpace = async () => {
-      const {data, success, message} = await getAllSpace(true);
+      const {data, success, message} = await getAllSpace(false);
       if (success) {
         setLstSpace(data);
       } else {
@@ -36,13 +31,6 @@ export default function Home() {
   
   const handleCondition = () => {
     setCondition(!condition);
-  }
-
-  const handleInput = (data) => {
-    if(data.trim() === ''){
-      return setDisable(true);
-    }
-    return setDisable(false);
   }
 
   const handleClickFolder = (id) => {
@@ -58,42 +46,27 @@ export default function Home() {
     setLstSpace(newLstSpace);
   }
 
-  const handleOk = async () => {
-    const {spcNm} = form.getFieldsValue();
-    try {
-      showLoading();
-      const { message, success} = await updateSpace({spcNm, spcId});
-      if ( success ) {
-        handleCondition();
-        notify(STATUS_TYPE.SUCCESS, 'Update folder sucessfully!')
-      } else {
-        notify(STATUS_TYPE.WARNING, message);
+  const handleMenuClick = async (key ,name, id) => {
+    if ( key === 'restore') {
+      try {
+        showLoading();
+        const { message, success} = await updateSpace({spcId: id, spcNm: name, actFlg: true});
+        if ( success ) {
+          handleCondition();
+          notify(STATUS_TYPE.SUCCESS, 'Restore folder sucessfully!');
+        } else {
+          notify(STATUS_TYPE.WARNING, message);
+        }
+      } finally {
+        hideLoading();
       }
-    } finally {
-      form.resetFields();
-      setShowEditModal(false);
-      hideLoading();
-    }
-  };
-
-  const handleCancel = () => {
-    form.resetFields();
-    setShowEditModal(false);
-    setDisable(false);
-  };
-
-  const handleMenuClick = async (key, name, id) => {
-    if ( key === 'edit') {
-      setShowEditModal(true);
-      form.setFieldValue('spcNm',name);
-      setSpcId(id);
     } else {
       try {
         showLoading();
         const { message, success} = await deleteSpace(id);
         if ( success ) {
           handleCondition();
-          notify(STATUS_TYPE.SUCCESS, 'Delete folder sucessfully!');
+          notify(STATUS_TYPE.SUCCESS, 'Delete permanent sucessfully!');
         } else {
           notify(STATUS_TYPE.WARNING, message);
         }
@@ -104,7 +77,7 @@ export default function Home() {
   };
 
   return (
-    <SpaceLayout handleCondition = {handleCondition} title={'space'}>
+    <SpaceLayout handleCondition = {handleCondition} title={'trash'}>
         <div className="container-fluid pl-12">
           <div className="flex w-full justify-between">
             <p className="subheader">Space</p>
@@ -122,36 +95,13 @@ export default function Home() {
                   clicked={space.clicked}
                   type='folder'
                   >
-                    <MoreMenu onClick={(key) =>handleMenuClick(key, space.spcNm, space.spcId)}/>
+                    <MoreMenu onClick={(key) =>handleMenuClick(key, space.spcNm, space.spcId)} type={'trash'}/>
                   </Folder> 
                 </div>
               ))
-            : <p className="text-[20px]"> No space created !</p>}
+            : <p className="text-[20px]"> No trash !</p>}
            </div>
         </div>
-        <Modal title='Edit Name' 
-            open={showEditModal} 
-            onCancel={handleCancel}
-            footer={null}
-            centered
-            >
-              <Form
-              form={form}
-              name='control-hooks'
-              onFinish={handleOk}
-              style={{
-                maxWidth: 600,
-              }}
-              >
-                <Form.Item name='spcNm'>
-                  <Input onChange={(e) => handleInput(e.target.value)} showCount maxLength={60}/>
-                </Form.Item>
-                <Form.Item component={false} id='category-editor-form' layout='vertical'>
-                  <Button type='submit' className='mt-[5px] ml-[8px] float-right' disabled={disable}> Change </Button>
-                  <Button className='mt-[5px] float-right' onClick={() => handleCancel()}> Cancel </Button>
-                </Form.Item>
-            </Form>
-          </Modal>
     </SpaceLayout>
   )
 }

@@ -6,7 +6,8 @@ export const NAME_EXIST = 'This name already exist';
 
 export const PREFIX_MODEL = {
     Attachment: 'ATC',
-    Space : 'SPC'
+    Space : 'SPC',
+    Header : 'HDR'
 };
 //100mb
 export const MAX_FILE_SIZE = 104857600;

@@ -18,7 +18,7 @@ export const SPACE_LIST = [
     },
     {
         key:   UI_KEY.Trash,
-        label: <Link href='/404'>Trash</Link>,
+        label: <Link href='/trash'>Trash</Link>,
         icon:  <DeleteOutlined />
     },
 ];

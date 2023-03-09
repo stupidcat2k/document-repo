@@ -1,4 +1,3 @@
-import { Content } from './content.entity';
 import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Model } from './model';
 import { Space } from './space.entity';
@@ -16,6 +15,12 @@ export class Header extends Model {
 
   @Column({ name:'spc_id'})
   spcId: string;
+
+  @Column({ name: 'act_flg'})
+  actFlg: boolean;
+
+  @Column({ name: 'hdr_ctnt'})
+  hdrCtnt: string;
 
   @ManyToOne(() => Space, (space) => space.headers, {
     cascade: true,

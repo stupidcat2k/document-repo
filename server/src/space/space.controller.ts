@@ -1,3 +1,9 @@
+import { Param, Req } from '@nestjs/common';
+import { Delete } from '@nestjs/common';
+import { UpdateSpaceDTO } from './dto/update-space.dto';
+import { HttpStatus } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
+import { Put } from '@nestjs/common';
 import {
   Body,
   Controller, Get, Post, Res
@@ -6,32 +12,74 @@ import { Response } from 'express';
 import { SERVER_ERROR_MESSAGE } from 'src/libs/constants';
 import { CurrentUser } from 'src/libs/decorators/current-user.decorator';
 import { ResponseObject } from 'src/libs/response-object';
-import { CreateSpaceDto } from './dto/create-space.dto';
+import { CreateSpaceDTO } from './dto/create-space.dto';
 import { SpaceService } from './space.service';
 
 @Controller('space')
 export class SpaceController {
   constructor(private spaceService: SpaceService) {}
 
-  @Get()
-  async getAllSpace () {
+  @Get('spaceByStatus/:actFlg')
+  async getAllSpaceByActFlg (@Param('actFlg') actFlg: boolean ,@Res() res: Response) {
     try {
-      const lstSpace = await this.spaceService.selectActiveSpace();
-      return ResponseObject.success(lstSpace);
-    } catch (error) {
-      console.log(error);
-      return ResponseObject.fail(SERVER_ERROR_MESSAGE);
+      const lstSpace = await this.spaceService.selectActiveSpace(actFlg);
+      return res.send(ResponseObject.success(lstSpace));
+    } catch (e) {
+      console.error(e);
+      if (e instanceof NotFoundException) {
+        return res.send(ResponseObject.fail(e.message));
+      }
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send(ResponseObject.fail(SERVER_ERROR_MESSAGE));
     }
   }
 
   @Post('/create')
-  async createSpace (@Body() spaceDTO: CreateSpaceDto, @CurrentUser('userId') userId, @Res() res: Response) {
+  async createSpace(@Body() createSpaceDTO: CreateSpaceDTO, @CurrentUser('userId') userId: string, @Res() res: Response) {
     try {
-      const result = this.spaceService.createNewSpace(spaceDTO, userId);
+      const result = this.spaceService.createNewSpace(createSpaceDTO, userId);
       return res.send(ResponseObject.success(result));
     } catch (error) {
       console.log(error);
       return res.send(ResponseObject.success(null));
+    }
+  }
+
+  @Put('update')
+  async updateSpace(@Body() updateSpaceDTO: UpdateSpaceDTO, @CurrentUser('userId') userId: string, @Res() res: Response, @Req() req: Request){
+    try {
+      const result = this.spaceService.updateSpace(updateSpaceDTO, userId);
+      return res.send(ResponseObject.success(result));
+    } catch (error) {
+      console.log(error);
+      return res.send(ResponseObject.success(null));
+    }
+  }
+
+  @Delete('deleteById/:id')
+  async deleteSpace(@Param('id') id: string, @CurrentUser('userId') userId: string, @Res() res: Response){
+    try {
+      const result = await this.spaceService.deleteSpaceById(id ,userId);
+      return res.send(ResponseObject.success(result));
+  } catch (e) {
+      console.error(e);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send(ResponseObject.fail(SERVER_ERROR_MESSAGE));
+    }
+  }
+
+  @Delete('deletePermanent/:id')
+  async deletePermanetSpace(@Param('id') id: string, @Res() res: Response){
+    try {
+      const result = await this.spaceService.deleteSpacePermaById(id);
+      return res.send(ResponseObject.success(result));
+  } catch (e) {
+      console.error(e);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send(ResponseObject.fail(SERVER_ERROR_MESSAGE));
     }
   }
 }

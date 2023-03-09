@@ -1,10 +1,11 @@
+import { UpdateSpaceDTO } from './dto/update-space.dto';
 import { CommonService } from '../libs/common-service/common.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Space } from 'src/entity';
 import { PREFIX_MODEL } from 'src/libs/constants';
-import { CreateSpaceDto } from './dto/create-space.dto';
+import { CreateSpaceDTO } from './dto/create-space.dto';
 
 @Injectable()
 export class SpaceService {
@@ -13,19 +14,19 @@ export class SpaceService {
     private commonService: CommonService,
   ) {}
 
-  async selectActiveSpace() {
+  async selectActiveSpace(actFlg: boolean) {
     return this.spaceRepository.find({
       select: {
         spcId: true,
         spcNm: true,
       },
       where: {
-        actFlg: true,
+        actFlg: actFlg,
       },
     });
   }
 
- async createNewSpace(createSpaceDto : CreateSpaceDto, userId : string) {
+ async createNewSpace(createSpaceDto : CreateSpaceDTO, userId : string) {
   const spcId = await this.commonService.createSeqNo(PREFIX_MODEL.Space);
   return await this.spaceRepository.save({
     createDate: new Date(),
@@ -38,4 +39,27 @@ export class SpaceService {
     dmnId: createSpaceDto.dmnId || '1',
   })
  } 
+
+ async updateSpace(updateSpaceDTO : UpdateSpaceDTO, userId : string) {
+  const space = await this.spaceRepository.findOne({ where: { spcId: updateSpaceDTO.spcId } });
+        space.updateDate = new Date();
+        space.updateUser = userId;
+        space.spcNm = updateSpaceDTO.spcNm; 
+        space.actFlg = updateSpaceDTO.actFlg ? updateSpaceDTO.actFlg : space.actFlg;
+        return await this.spaceRepository.save(space);
+ }
+ 
+ async deleteSpaceById(id: string, userId: string){
+  const space = await this.spaceRepository.findOne({ where: { spcId: id } });
+        space.updateDate = new Date();
+        space.updateUser = userId;
+        space.actFlg = false;
+        return await this.spaceRepository.save(space);
+ }
+
+ async deleteSpacePermaById(id: string){
+  const space = await this.spaceRepository.findOne({where: {spcId: id}});
+  const result = await this.spaceRepository.delete(space);
+  return result;
+ }
 }

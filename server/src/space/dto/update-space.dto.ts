@@ -1,4 +1,4 @@
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateSpaceDTO {
@@ -10,7 +10,8 @@ export class UpdateSpaceDTO {
   @IsString()
   spcId: string;
 
-  @ApiProperty({ default: true})
+  @ApiProperty({ default: true })
   @IsBoolean()
+  @IsOptional()
   actFlg: boolean;
 }

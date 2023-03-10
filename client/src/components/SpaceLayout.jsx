@@ -19,7 +19,6 @@ const SpaceLayout = ({ children, handleCondition, title }) => {
 
   const [showLoading, hideLoading] = useLoading();
   const notify = useNotify();
-  let menuKey = 'space';
   const handleOpenModal = () => {
     setShowModal(true);
   };

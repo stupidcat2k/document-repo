@@ -57,3 +57,10 @@ export const NOTIFICATION_COLOR = {
 export const DATE_YYYYMMDDHHMMSS = 'YYYY-MM-DD HH:mm:ss';
 export const DATE_YYYYMMDD = 'MMM DD, YYYY';
 export const DATE_YYYYMMDDHHMMSS_FILE = 'YYYY_MM_DD-HH_mm_ss';
+export const FILE_TYPE = [
+  'image/jpeg', 
+  'image/gif', 
+  'image/png', 
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+  'application/pdf'
+]

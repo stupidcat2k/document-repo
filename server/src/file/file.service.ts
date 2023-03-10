@@ -18,7 +18,9 @@ export class FileService {
     objId: string,
   ) {
     for (const file of files) {
-      const atchNo = await this.commonService.createSeqNo(PREFIX_MODEL.Attachment);
+      const atchNo = await this.commonService.createSeqNo(
+        PREFIX_MODEL.Attachment,
+      );
       await this.attachFile.save({
         createDate: new Date(),
         createUser: loginUsrId,

@@ -1,4 +1,3 @@
-import { SpaceService } from './../space/space.service';
 import { DocService } from './doc.service';
 import { DocController } from './doc.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';

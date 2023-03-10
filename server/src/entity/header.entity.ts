@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Entity, PrimaryColumn, Column, JoinColumn, ManyToOne } from 'typeorm';
 import { Model } from './model';
 import { Space } from './space.entity';
 
@@ -10,16 +10,16 @@ export class Header extends Model {
   @Column({ name: 'prnt_hdr_id' })
   prntHdrId: string;
 
-  @Column({ name: 'hdr_nm'})
+  @Column({ name: 'hdr_nm' })
   hdrNm: string;
 
-  @Column({ name:'spc_id'})
+  @Column({ name: 'spc_id' })
   spcId: string;
 
-  @Column({ name: 'act_flg'})
+  @Column({ name: 'act_flg' })
   actFlg: boolean;
 
-  @Column({ name: 'hdr_ctnt'})
+  @Column({ name: 'hdr_ctnt' })
   hdrCtnt: string;
 
   @ManyToOne(() => Space, (space) => space.headers, {

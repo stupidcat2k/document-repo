@@ -1,4 +1,3 @@
-
 import { FileModule } from './file/file.module';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { Module } from '@nestjs/common';
@@ -27,7 +26,7 @@ import { DocModule } from './doc/doc.module';
     AuthModule,
     FileModule,
     SpaceModule,
-    DocModule
+    DocModule,
   ],
   providers: [
     {

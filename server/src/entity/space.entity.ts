@@ -1,5 +1,12 @@
 import { Domain } from './domain.entity';
-import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  OneToMany,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { Model } from './model';
 import { Header } from './header.entity';
 
@@ -17,7 +24,7 @@ export class Space extends Model {
   @Column({ name: 'act_flg' })
   actFlg: boolean;
 
-  @Column({ name: 'dmn_id'})
+  @Column({ name: 'dmn_id' })
   dmnId: string;
 
   @ManyToOne(() => Domain, (domain) => domain.spaces, {

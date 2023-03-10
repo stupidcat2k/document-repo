@@ -32,16 +32,18 @@ export class FileController {
       storage: diskStorage({
         destination: (req, file, callback) => {
           const bizPath = req.body.bizFolder ? '/' + req.body.bizFolder : '';
-			    const path = ROOT_FOLDER + '/' + UPLOAD_PATH + bizPath;
+          const path = ROOT_FOLDER + '/' + UPLOAD_PATH + bizPath;
           fs.mkdirSync(path, { recursive: true });
           callback(null, path);
         },
         filename: (req, file, callback) => {
-          return callback(null,
+          return callback(
+            null,
             path.parse(file.originalname).name +
-            '-' +
-            Date.now() +
-            path.extname(file.originalname));
+              '-' +
+              Date.now() +
+              path.extname(file.originalname),
+          );
         },
       }),
       limits: { fileSize: MAX_FILE_SIZE },
@@ -53,15 +55,15 @@ export class FileController {
     @Res() res,
   ) {
     try {
-      const { objId, userId, bizFolder }= req.body;
+      const { objId, userId, bizFolder } = req.body;
       const bizPath = bizFolder ? '/' + bizFolder : '';
       //handle path in database
       files.map((file) => {
         file.path = bizPath
-				? bizPath + '/' + file.filename
-				: '/' + file.filename;
+          ? bizPath + '/' + file.filename
+          : '/' + file.filename;
       });
-        this.fileSerice.insertFile(files, userId, objId);
+      this.fileSerice.insertFile(files, userId, objId);
       return res.send(
         ResponseObject.success({
           data: files.map((file) => file.path),
@@ -92,17 +94,19 @@ export class FileController {
     FilesInterceptor('upload', 1, {
       storage: diskStorage({
         destination: (req, file, callback) => {
-          const bizPath = '/ckeditor'
-			    const path = ROOT_FOLDER + '/' + UPLOAD_PATH + bizPath;
+          const bizPath = '/ckeditor';
+          const path = ROOT_FOLDER + '/' + UPLOAD_PATH + bizPath;
           fs.mkdirSync(path, { recursive: true });
           callback(null, path);
         },
         filename: (req, file, callback) => {
-          return callback(null,
+          return callback(
+            null,
             path.parse(file.originalname).name +
-            '-' +
-            Date.now() +
-            path.extname(file.originalname));
+              '-' +
+              Date.now() +
+              path.extname(file.originalname),
+          );
         },
       }),
       limits: { fileSize: MAX_FILE_SIZE },
@@ -114,13 +118,18 @@ export class FileController {
     @Res() res,
   ) {
     const BIZ_PATH = '/ckeditor';
-    const API_PATH = 'api/file/'
+    const API_PATH = 'api/file/';
     const configService = new ConfigService();
-    const HOST_PATH = configService.get('HOST_END_POINT') + ':' + configService.get('PORT') + '/';
-    upload[0].path = HOST_PATH + API_PATH + UPLOAD_PATH + BIZ_PATH + '/' + upload[0].filename;
-    const url = upload[0].path
+    const HOST_PATH =
+      configService.get('HOST_END_POINT') +
+      ':' +
+      configService.get('PORT') +
+      '/';
+    upload[0].path =
+      HOST_PATH + API_PATH + UPLOAD_PATH + BIZ_PATH + '/' + upload[0].filename;
+    const url = upload[0].path;
     return res.send({
-      url:url
+      url: url,
     });
   }
 }

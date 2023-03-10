@@ -9,6 +9,7 @@ import { STATUS_TYPE } from '@/core/Constants';
 import { createDoc } from '@/api/docApi';
 import { useLoading } from '@/hooks/LoadingHook';
 import { useRouter } from 'next/router';
+import { UploadComponent } from '@/components';
 
 const CKEditorComponent = dynamic(() => import('@/components/CKEditor'), {
   ssr: false
@@ -71,6 +72,9 @@ function Editor() {
           </Form.Item>
           <Form.Item>
           <CKEditorComponent initialValue={editorValue}/>
+          </Form.Item>
+          <Form.Item name="files" label="Files">
+            <UploadComponent maxCount={8} />
           </Form.Item>
         </Form>
         <div className='ant-back-top bottom-24'>

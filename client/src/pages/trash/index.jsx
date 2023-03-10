@@ -1,4 +1,4 @@
-import { deleteSpace, getAllSpace, updateSpace } from "@/api/spaceApi";
+import { deleteSpace, deleteSpacePermanent, getAllSpace, updateSpace } from "@/api/spaceApi";
 import { SpaceLayout, Folder, Button, MoreMenu } from "@/components";
 import { STATUS_TYPE } from "@/core/Constants";
 import { useLoading } from "@/hooks/LoadingHook";
@@ -63,7 +63,7 @@ export default function Trash() {
     } else {
       try {
         showLoading();
-        const { message, success} = await deleteSpace(id);
+        const { message, success} = await deleteSpacePermanent(id);
         if ( success ) {
           handleCondition();
           notify(STATUS_TYPE.SUCCESS, 'Delete permanent sucessfully!');
@@ -76,6 +76,33 @@ export default function Trash() {
     }
   };
 
+  const handleSort = () => {
+    setIcon(!icon);
+    if (icon) {
+      lstSpace.sort((a, b) => {
+        if (a.spcNm < b.spcNm) {
+          return -1;
+        }
+        if (a.spcNm > b.spcNm) {
+          return 1;
+        }
+        return 0;
+      });
+      setLstSpace(lstSpace);
+    } else {
+      lstSpace.sort((a, b) => {
+        if (a.spcNm < b.spcNm) {
+          return 1;
+        }
+        if (a.spcNm > b.spcNm) {
+          return -1;
+        }
+        return 0;
+      });
+      setLstSpace(lstSpace);
+    }
+  }
+
   return (
     <SpaceLayout handleCondition = {handleCondition} title={'trash'}>
         <div className="container-fluid pl-12">
@@ -83,7 +110,7 @@ export default function Trash() {
             <p className="subheader">Space</p>
             <div className="flex">
               <p className="mr-[10px] pt-1">Name</p>
-              <Button size='small' variant='icon' onClick={() => setIcon(!icon) } >{!icon ? <DownOutlined /> : <UpOutlined />}</Button>
+              <Button size='small' variant='icon' onClick={handleSort} >{!icon ? <DownOutlined /> : <UpOutlined />}</Button>
             </div>
           </div>
           <div className="grid grid-cols-6">

@@ -62,5 +62,10 @@ export const FILE_TYPE = [
   'image/gif', 
   'image/png', 
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
-  'application/pdf'
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'video/mp4',
+  'application/x-zip-compressed',
+  '',
 ]

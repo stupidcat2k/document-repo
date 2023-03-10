@@ -1,5 +1,5 @@
 import MenuApp from './Menu';
-import { Layout, BackTop, Image } from 'antd';
+import { Layout, Image, FloatButton } from 'antd';
 import styles from './styles/Layout.module.css';
 import { useSelector } from 'react-redux';
 import logo from '../images/logo.png';
@@ -33,7 +33,7 @@ const LayoutApp = ({ children }) => {
         </Header>
         <Content className={styles.content}>{children}</Content>
       </Layout>
-      <BackTop />
+      <FloatButton.BackTop visibilityHeight={400} />
     </Layout>
   );
 };

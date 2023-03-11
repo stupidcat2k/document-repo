@@ -16,7 +16,7 @@ import { SpaceService } from './space.service';
 export class SpaceController {
   constructor(private spaceService: SpaceService) {}
 
-  @Get('spaceByStatus/:actFlg')
+  @Get('select-space-by-status/:actFlg')
   async getAllSpaceByActFlg(
     @Param('actFlg') actFlg: boolean,
     @Res() res: Response,
@@ -71,7 +71,7 @@ export class SpaceController {
     }
   }
 
-  @Delete('deleteById/:id')
+  @Delete('delete-by-id/:id')
   async deleteSpace(
     @Param('id') id: string,
     @CurrentUser('userId') userId: string,
@@ -88,7 +88,7 @@ export class SpaceController {
     }
   }
 
-  @Delete('deletePermanent/:id')
+  @Delete('delete-permanent/:id')
   async deletePermanetSpace(@Param('id') id: string, @Res() res: Response) {
     try {
       const result = await this.spaceService.deleteSpacePermaById(id);

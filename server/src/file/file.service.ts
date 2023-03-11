@@ -1,7 +1,7 @@
 import { CommonService } from '../libs/common-service/common.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { AttachFile } from 'src/entity/file.entity';
+import { AttachFile } from 'src/entity/attachment.entity'
 import { Repository } from 'typeorm';
 import { PREFIX_MODEL } from 'src/libs/constants';
 
@@ -34,5 +34,13 @@ export class FileService {
         atchNo: atchNo.toString(),
       });
     }
+  }
+
+  async deleteFileById (
+    atchNo: string
+  ) {
+    const files = await this.attachFile.find({where:{atchNo: atchNo}});
+    const result = await this.attachFile.remove(files);
+    return result;
   }
 }

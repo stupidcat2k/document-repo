@@ -7,12 +7,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { UpdateDocDTO } from './dto/update-doc.dto';
+import { UpdateDocNameDTO } from './dto/update-doc-name.dto';
+import { AttachFile } from 'src/entity/attachment.entity';
 
 @Injectable()
 export class DocService {
   constructor(
     @InjectRepository(Header) private headerRepository: Repository<Header>,
-    @InjectRepository(Space) private spaceRpository: Repository<Space>,
+    @InjectRepository(Space) private spaceRepository: Repository<Space>,
+    @InjectRepository(AttachFile) private fileRepository: Repository<AttachFile>,
     private commonService: CommonService,
   ) {}
 
@@ -35,8 +38,8 @@ export class DocService {
         'spc.spc_nm as "spcNm"',
       ])
       .getRawMany();
-    if (docs) {
-      return this.spaceRpository.findOne({
+    if (!docs) {
+      return this.spaceRepository.findOne({
         select: {
           spcNm: true,
         },
@@ -47,6 +50,23 @@ export class DocService {
       });
     }
     return docs;
+  }
+
+  async getDocDetailHdrId(hdrId: string) {
+    const docs = await this.headerRepository.findOne({where: {
+      hdrId: hdrId,
+      actFlg: true
+    }})
+    const files = await this.fileRepository.find({where: {
+      objId: hdrId
+    },
+      select: {
+        fileLocUrl:true,
+        fileNm:true,
+        atchNo:true
+      }
+  })
+    return {docs:docs, files:files};
   }
 
   async createDoc(createDocDTO: CreateDocDTO, userId: string) {
@@ -64,13 +84,24 @@ export class DocService {
     return hdrId;
   }
 
-  async updateDoc(updateDocDTO: UpdateDocDTO, userId: string) {
+  async updateDocName(updateDocNameDTO: UpdateDocNameDTO, userId: string) {
+    const doc = await this.headerRepository.findOne({
+      where: { hdrId: updateDocNameDTO.hdrId },
+    });
+    doc.updateDate = new Date();
+    doc.updateUser = userId;
+    doc.hdrNm = updateDocNameDTO.hdrNm;
+    return await this.headerRepository.save(doc);
+  }
+
+  async updateDocDetails(updateDocDTO: UpdateDocDTO, userId: string) {
     const doc = await this.headerRepository.findOne({
       where: { hdrId: updateDocDTO.hdrId },
     });
     doc.updateDate = new Date();
     doc.updateUser = userId;
     doc.hdrNm = updateDocDTO.hdrNm;
+    doc.hdrCtnt = updateDocDTO.txtCtnt;
     return await this.headerRepository.save(doc);
   }
 

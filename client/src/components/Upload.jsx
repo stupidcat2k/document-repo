@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { Upload, Modal, Image } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Upload, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNotify } from '@/hooks/NotificationHook';
 import { FILE_TYPE, STATUS_TYPE } from '@/core/Constants';
-import docIcon from '../images/ico-doc.png';
 
 function UploadComponent(props) {
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -11,6 +10,24 @@ function UploadComponent(props) {
   const [previewTitle, setPreviewTitle] = useState('');
   const [fileLst, setFileList] = useState([]);
   const notify = useNotify();
+
+  const imageURL = `http://localhost:4050/api/file/upload`;
+  useEffect(() => {
+    if(props.files !== undefined && props.files !== null){
+      const files = props.files;
+      const lstFile = [];
+      for (const item of files) {
+        lstFile.push({
+          uid: item.atchNo,
+          name: item.fileNm,
+          status: 'done',
+          thumbUrl: imageURL + item.fileLocUrl,
+          url: imageURL + item.fileLocUrl
+        });
+      }
+      setFileList(lstFile);
+    }
+  }, [props.files]);
 
   const handleCancel = () => {
     setPreviewVisible(false);
@@ -20,9 +37,12 @@ function UploadComponent(props) {
     if (!file.url && !file.preview) {
       file.preview = URL.createObjectURL(file.originFileObj);
     }
-    
-    if (file.type.startsWith('image/')) {
+    if (file.type && file.type.startsWith('image/')) {
       setPreviewImage(URL.createObjectURL(file.originFileObj));
+      setPreviewVisible(true);
+      setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+    } else { 
+      setPreviewImage(file.url);
       setPreviewVisible(true);
       setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     }
@@ -30,10 +50,27 @@ function UploadComponent(props) {
 
   const handleChange = ({ fileList }) => {
     const allowedFileTypes = FILE_TYPE;
-    const filteredFileList = fileList.filter(file => allowedFileTypes.includes(file.type));
-    setFileList(filteredFileList);
-    props.onChange(filteredFileList);
+    const newFileList = fileList.filter(file => allowedFileTypes.includes(file.type));
+    const mergedFileList = [
+      ...fileLst.filter(file => !file.deleted && !newFileList.some(newFile => newFile.uid === file.uid && newFile.name === file.name)),
+      ...newFileList
+    ];
+  
+    setFileList(mergedFileList);
+    props.onChange(mergedFileList);
   };
+
+  const handleRemove = file => {
+    const newFileList = fileLst.map(item => {
+      if (item.uid === file.uid) {
+        return item.deleted = true;
+      }
+      return item;
+    });
+    props.handleRemoveFile(file);
+    setFileList(newFileList);
+    handleChange({ fileList: newFileList });
+  }
 
   const beforeUpload = file => {
     const allowedFileTypes = FILE_TYPE;
@@ -64,6 +101,7 @@ function UploadComponent(props) {
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={beforeUpload}
+        onRemove={handleRemove}
       >
         {fileLst.length >= props.maxCount ? null : uploadButton}
       </Upload>

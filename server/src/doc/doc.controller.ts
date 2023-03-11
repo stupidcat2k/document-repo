@@ -17,6 +17,7 @@ import { Response } from 'express';
 import { SERVER_ERROR_MESSAGE } from 'src/libs/constants';
 import { CurrentUser } from 'src/libs/decorators/current-user.decorator';
 import { UpdateDocDTO } from './dto/update-doc.dto';
+import { UpdateDocNameDTO } from './dto/update-doc-name.dto';
 
 @Controller('doc')
 export class DocController {
@@ -59,14 +60,32 @@ export class DocController {
     }
   }
 
-  @Put('update')
-  async updateDoc(
-    @Body() updateDocDTO: UpdateDocDTO,
+  @Get(':id/')
+  async findDocDetails(
+    @Param('id') id: string,
+    @Res() res: Response,
+  ) {
+    try {
+      const result = await this.docService.getDocDetailHdrId(id);
+      return res.send(ResponseObject.success(result));
+    } catch (e) {
+      console.error(e);
+      if (e instanceof NotFoundException) {
+        return res.send(ResponseObject.fail(e.message));
+      }
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send(ResponseObject.fail(SERVER_ERROR_MESSAGE));
+    }
+  }
+  @Put('update-doc-name')
+  async updateDocName(
+    @Body() updateDocNameDTO: UpdateDocNameDTO,
     @Res() res: Response,
     @CurrentUser('userId') userId,
   ) {
     try {
-      const result = await this.docService.updateDoc(updateDocDTO, userId);
+      const result = await this.docService.updateDocName(updateDocNameDTO, userId);
       return res.send(ResponseObject.success(result));
     } catch (e) {
       console.error(e);
@@ -76,7 +95,25 @@ export class DocController {
     }
   }
 
-  @Delete('deleteById/:id')
+  @Put('update-doc-details')
+  async updateDocDetail(
+    @Body() updateDocDTO: UpdateDocDTO,
+    @Res() res: Response,
+    @CurrentUser('userId') userId,
+  ) {
+    try {
+      const result = await this.docService.updateDocDetails(updateDocDTO, userId);
+      return res.send(ResponseObject.success(result));
+    } catch (e) {
+      console.error(e);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send(ResponseObject.fail(SERVER_ERROR_MESSAGE));
+    }
+  }
+
+
+  @Delete('delete-by-id/:id')
   async deleteDoc(
     @Param('id') id: string,
     @Res() res: Response,

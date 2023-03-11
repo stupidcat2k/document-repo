@@ -1,4 +1,4 @@
-import { deleteDoc, getAllDocBySpcId, updateDoc } from '@/api/docApi';
+import { deleteDoc, getAllDocBySpcId, updateDocName } from '@/api/docApi';
 import { SpaceLayout, Button, Folder, MoreMenu} from '@/components';
 import { STATUS_TYPE } from '@/core/Constants';
 import { useLoading } from '@/hooks/LoadingHook';
@@ -121,7 +121,7 @@ export default function FolderComp() {
     const {hdrNm} = form.getFieldsValue();
     try {
       showLoading();
-      const { message, success} = await updateDoc({hdrNm, hdrId});
+      const { message, success} = await updateDocName({hdrNm, hdrId});
       if ( success ) {
         handleCondition();
         notify(STATUS_TYPE.SUCCESS, 'Update file sucessfully!')

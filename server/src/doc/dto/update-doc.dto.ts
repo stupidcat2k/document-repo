@@ -9,4 +9,8 @@ export class UpdateDocDTO {
   @ApiProperty()
   @IsString()
   hdrNm: string;
+
+  @ApiProperty()
+  @IsString()
+  txtCtnt: string;
 }

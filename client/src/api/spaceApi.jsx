@@ -3,7 +3,7 @@ import { $http } from "@/core/HttpClient";
 const BASE_URL = 'api/space';
 
 export const getAllSpace = async (payload) => {
-    return await $http.get(`${BASE_URL}/spaceByStatus/${payload}`);
+    return await $http.get(`${BASE_URL}/select-space-by-status/${payload}`);
 };
 
 export const createSpace = async (payload) => {
@@ -15,9 +15,9 @@ export const updateSpace = async (payload) => {
 }
 
 export const deleteSpace = async (payload) => {
-    return await $http.delete(`${BASE_URL}/deleteById/${payload}`);
+    return await $http.delete(`${BASE_URL}/delete-by-id/${payload}`);
 }
 
 export const deleteSpacePermanent = async (payload) => {
-    return await $http.delete(`${BASE_URL}/deletePermanent/${payload}`);
+    return await $http.delete(`${BASE_URL}/delete-permanent/${payload}`);
 }

@@ -2,7 +2,9 @@ import { ConfigService } from '@nestjs/config';
 import { MAX_FILE_SIZE } from './../libs/constants';
 import {
   Controller,
+  Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Req,
@@ -23,7 +25,7 @@ const ROOT_FOLDER = path.dirname(process.cwd());
 const UPLOAD_PATH = process.env.UPLOAD_PATH || 'upload';
 @Controller('file')
 export class FileController {
-  constructor(private fileSerice: FileService) {}
+  constructor(private fileService: FileService) {}
 
   @Post('upload')
   @Public()
@@ -63,7 +65,7 @@ export class FileController {
           ? bizPath + '/' + file.filename
           : '/' + file.filename;
       });
-      this.fileSerice.insertFile(files, userId, objId);
+      this.fileService.insertFile(files, userId, objId);
       return res.send(
         ResponseObject.success({
           data: files.map((file) => file.path),
@@ -131,5 +133,18 @@ export class FileController {
     return res.send({
       url: url,
     });
+  }
+
+  @Delete(':id')
+  async deleteFileById (@Param('id') id: string, @Res() res,) {
+    try {
+      const result = await this.fileService.deleteFileById(id);
+      return res.send(ResponseObject.success(result));
+    } catch (e) {
+      console.error(e);
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send(ResponseObject.fail(SERVER_ERROR_MESSAGE));
+    }
   }
 }

@@ -9,4 +9,4 @@ export * from './domain.entity';
 export * from './auth.entity';
 export * from './header.entity';
 export * from './space.entity';
-export * from './file.entity';
+export * from './attachment.entity';

@@ -16,7 +16,7 @@ export const typeormConfig: DataSourceOptions & TypeOrmModuleOptions = {
   username: configService.get('DB_USERNAME'),
   password: configService.get('DB_PASSWORD'),
   database: configService.get('DB_DATABASE'),
-  logging: true,
+  logging: false,
   synchronize: false,
 };
 

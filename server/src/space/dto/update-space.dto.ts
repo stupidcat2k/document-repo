@@ -10,7 +10,7 @@ export class UpdateSpaceDTO {
   @IsString()
   spcId: string;
 
-  @ApiProperty({ default: true })
+  @ApiProperty()
   @IsBoolean()
   @IsOptional()
   actFlg: boolean;

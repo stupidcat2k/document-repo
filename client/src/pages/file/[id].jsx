@@ -33,20 +33,28 @@ function Editor() {
 
   useEffect(() => {
     if (!router.isReady) return;
+    if (!['SPC', 'HDR'].includes(id.substring(0, 3))) {
+      router.push('/404');
+      return;
+    }
+
     if (id.substring(0, 3) === 'HDR') {
       const fetchData = async () => {
         if (!router.isReady) return;
         const {data, success, message} = await getDocDetailsByHdrId(`${id}`);
-        if (success) {
+        if ( success ) {
+          if(data.docs !== null){
             form.setFieldsValue({
-            hdrNm: data.docs.hdrNm,
-          });
-          setEditorValue(data.docs.hdrCtnt);
-          setLstFile(data.files);
+              hdrNm: data.docs.hdrNm,
+            });
+            setEditorValue(data.docs.hdrCtnt);
+            setLstFile(data.files);
+          } else {
+            return notify(STATUS_TYPE.ERROR);
+          }
         } else {
           return notify(STATUS_TYPE.ERROR, message);
         }
-
       };
       fetchData();
     }
@@ -80,7 +88,7 @@ function Editor() {
       }
       const { message, success, data} = await createDoc(ro);
       if ( success ) {
-        const status = await handleSaveFile(); 
+        const status = await handleSaveFile(data);
           if (status === 201) {
           notify(STATUS_TYPE.SUCCESS, 'Create successfully!');
           router.push(`/file/${data}`);
@@ -116,15 +124,16 @@ function Editor() {
     }
   }
 
-  const handleSaveFile = async () => {
+  const handleSaveFile = async (hdrId) => {
     if (deleteFiles.length !== 0) {
       for (const file of deleteFiles) {
         await deleteFile(file.uid);
       }
     }
+
     let formData = new FormData();
-    formData.append("objId", id);
-    formData.append("bizFolder", id); 
+    formData.append("objId", hdrId ? hdrId : id);
+    formData.append("bizFolder", hdrId ? hdrId : id); 
     formData.append("userId", userId);
     for (const file of newLstFile) {
       if (file.originFileObj) {
@@ -168,7 +177,7 @@ function Editor() {
           <CKEditorComponent initialValue={editorValue}/>
           </Form.Item>
           <Form.Item name="files" label="Files">
-            <UploadComponent maxCount={8} />
+            <UploadComponent maxCount={8} files={lstFile} onChange={handleNewListFile} handleRemoveFile={handleRemoveFile}/>
           </Form.Item>
         </Form>
         <FloatButton

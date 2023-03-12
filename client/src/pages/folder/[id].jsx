@@ -134,6 +134,10 @@ export default function FolderComp() {
       hideLoading();
     }
   };
+  const breadcrumbItems = [
+    { text: 'Space', onClick: () => router.push('/') },
+    { text: lstFile && lstFile.length ? lstFile[0].spcNm : lstFile.spcNm, href: '' }
+  ];
   return (
     <SpaceLayout handleCondition = {handleCondition}>
         <div className='container-fluid pl-12'>
@@ -148,18 +152,18 @@ export default function FolderComp() {
             </div>
           </div>
           <div>
-            <Button onClick={() =>router.push(`/edit/${id}`)}>New Document</Button>
+            <Button onClick={() =>router.push(`/file/${id}`)}>New Document</Button>
           </div>
           <div className='grid grid-cols-6'>
             {lstFile && lstFile.length ? 
               lstFile.map(header => (
-                <div className='flex'>
-                <Folder key={header.hdrId} id={header.hdrId} name={header.hdrNm} 
-                handleClickFolder={handleClickFolder} 
-                clicked={header.clicked}
-                >
-                  <MoreMenu onClick={(key) =>handleMenuClick(key, header.hdrNm, header.hdrId)}/>
-                </Folder> 
+                <div className='flex' key={header.hdrId}>
+                  <Folder id={header.hdrId} name={header.hdrNm} 
+                    handleClickFolder={handleClickFolder} 
+                    clicked={header.clicked}
+                  >
+                    <MoreMenu onClick={(key) =>handleMenuClick(key, header.hdrNm, header.hdrId)}/>
+                  </Folder> 
                 </div>
               ))
             : <p className='text-[20px]'> No space created !</p>}
